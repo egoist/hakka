@@ -1,0 +1,11 @@
+query topicForEdit($id: Int!) {
+  topicById(id: $id) {
+    id
+    title
+    content
+    nodeId
+    author {
+      id
+    }
+  }
+}

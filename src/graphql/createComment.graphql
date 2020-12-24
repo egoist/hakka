@@ -1,0 +1,6 @@
+mutation createComment($topicId: Int!, $content: String!, $parentId: Int) {
+  createComment(topicId: $topicId, content: $content, parentId: $parentId) {
+    id
+    html
+  }
+}

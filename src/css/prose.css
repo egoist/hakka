@@ -1,0 +1,11 @@
+.prose > *:first-child {
+  @apply mt-0;
+}
+
+.prose > *:last-child {
+  @apply mb-0;
+}
+
+.prose p {
+  @apply my-3;
+}
