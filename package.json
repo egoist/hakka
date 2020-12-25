@@ -1,8 +1,11 @@
 {
   "private": true,
   "scripts": {
+    "start": "node server-build/main",
     "dev": "snowpack dev",
-    "build": "snowpack build",
+    "build": "npm run build:server && npm run build:client",
+    "build:client": "snowpack build",
+    "build:server": "esbuild --bundle server/main.ts --outdir=server-build --platform=node",
     "g:gql": "graphql-codegen --config graphql-codegen.yml"
   },
   "devDependencies": {
@@ -23,6 +26,7 @@
     "@types/react-router-dom": "5.1.6",
     "@types/react-select": "^3.0.28",
     "autoprefixer": "10.1.0",
+    "esbuild": "^0.8.26",
     "postcss": "^8.2.1",
     "postcss-cli": "^8.3.1",
     "prettier": "2.2.1",
@@ -44,6 +48,7 @@
     "react-dom": "17.0.1",
     "react-router-dom": "5.2.0",
     "react-select": "^3.1.1",
+    "serve-static": "^1.14.1",
     "urql": "1.11.4",
     "zustand": "^3.2.0"
   }
