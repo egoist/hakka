@@ -4,11 +4,21 @@ import { Link, useHistory } from 'react-router-dom'
 import { Menu, Transition } from '@headlessui/react'
 
 import { useAuth } from '../hooks/useAuth'
+import { useNotificationsCountQuery } from '@src/generated/graphql'
+import clsx from 'clsx'
 
 export const Header = () => {
   const { user } = useAuth()
   const history = useHistory()
   const logout = useStore((state) => state.logout)
+  const [notificationsCountQuery] = useNotificationsCountQuery({
+    pause: !user,
+    requestPolicy: 'cache-and-network',
+    pollInterval: 30 * 1000,
+  })
+  const hasNotifications =
+    typeof notificationsCountQuery.data?.notificationsCount === 'number' &&
+    notificationsCountQuery.data.notificationsCount > 0
   return (
     <header className="header bg-white z-10 px-5 border-b border-border fixed top-0 left-0 right-0 h-14">
       <div className="h-full flex items-center justify-between">
@@ -36,11 +46,14 @@ export const Header = () => {
         {user && (
           <div className="flex space-x-3 md:space-x-8 items-center text-gray-600">
             <div>
-              <Link to="/notifications" className="hover:text-blue-500">
+              <Link
+                to="/notifications"
+                className={clsx(`inline-block relative`, `hover:text-blue-500`)}
+              >
                 <svg
                   focusable="false"
-                  width="1em"
-                  height="1em"
+                  width="1.2em"
+                  height="1.2em"
                   viewBox="0 0 24 24"
                 >
                   <path
@@ -48,6 +61,12 @@ export const Header = () => {
                     fill="currentColor"
                   ></path>
                 </svg>
+                {hasNotifications && (
+                  <span className="flex h-2 w-2 absolute top-0 right-0 transform translate-x-1 -translate-y-1">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                    <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
+                  </span>
+                )}
               </Link>
             </div>
             <div className="relative">

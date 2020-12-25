@@ -9,6 +9,7 @@ import { NewNodePage } from '@src/pages/NewNode'
 import { NodePage } from '@src/pages/Node'
 import { SettingsPage } from '@src/pages/Settings'
 import { NotificationsPage } from '@src/pages/Notifications'
+import { UserPage } from '@src/pages/User'
 
 export const App = () => {
   return (
@@ -37,6 +38,9 @@ export const App = () => {
         </Route>
         <Route path="/go/:nodeSlug" exact>
           <NodePage />
+        </Route>
+        <Route path="/u/:username" exact>
+          <UserPage />
         </Route>
         <Route path="/login-success" exact>
           <LoginSuccessPage />

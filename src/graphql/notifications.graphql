@@ -1,0 +1,37 @@
+query notifications {
+  notifications {
+    id
+    createdAt
+    resolvedData {
+      ... on CommentReplyData {
+        type
+        replyComment {
+          id
+          html
+          author {
+            username
+          }
+          topic {
+            id
+            title
+          }
+        }
+      }
+      ... on TopicCommentData {
+        type
+        comment {
+          id
+          html
+          author {
+            username
+          }
+          topic {
+            id
+            title
+            authorId
+          }
+        }
+      }
+    }
+  }
+}

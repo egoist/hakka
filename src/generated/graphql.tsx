@@ -27,6 +27,7 @@ export type Query = {
   topicById: Topic;
   comments: CommentsConnection;
   notifications: Array<Notification>;
+  notificationsCount: Scalars['Int'];
 };
 
 
@@ -121,9 +122,11 @@ export type Comment = {
   content: Scalars['String'];
   authorId: Scalars['Int'];
   parentId?: Maybe<Scalars['Int']>;
+  topicId: Scalars['Int'];
   html: Scalars['String'];
   author: UserPublicInfo;
   parent?: Maybe<Comment>;
+  topic: Topic;
 };
 
 export type UserPublicInfo = {
@@ -141,10 +144,26 @@ export enum Sort_Order {
 export type Notification = {
   __typename?: 'Notification';
   id: Scalars['Int'];
-  type: Scalars['String'];
+  createdAt: Scalars['DateTime'];
+  isRead?: Maybe<Scalars['Boolean']>;
   data: Scalars['JSONObject'];
+  resolvedData: ResolvedDataUnion;
 };
 
+
+export type ResolvedDataUnion = TopicCommentData | CommentReplyData;
+
+export type TopicCommentData = {
+  __typename?: 'TopicCommentData';
+  type: Scalars['String'];
+  comment: Comment;
+};
+
+export type CommentReplyData = {
+  __typename?: 'CommentReplyData';
+  type: Scalars['String'];
+  replyComment: Comment;
+};
 
 export type Mutation = {
   __typename?: 'Mutation';
@@ -155,7 +174,7 @@ export type Mutation = {
   updateTopic: Topic;
   likeTopic: Scalars['Boolean'];
   createComment: Comment;
-  markAllAsRead: Scalars['Boolean'];
+  markAllNotificationsAsRead: Scalars['Boolean'];
 };
 
 
@@ -289,6 +308,14 @@ export type LikeTopicMutation = (
   & Pick<Mutation, 'likeTopic'>
 );
 
+export type MarkAllNotificationsAsReadMutationVariables = Exact<{ [key: string]: never; }>;
+
+
+export type MarkAllNotificationsAsReadMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'markAllNotificationsAsRead'>
+);
+
 export type NodesForNewTopicQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -298,6 +325,54 @@ export type NodesForNewTopicQuery = (
     { __typename?: 'Node' }
     & Pick<Node, 'id' | 'slug' | 'name'>
   )> }
+);
+
+export type NotificationsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type NotificationsQuery = (
+  { __typename?: 'Query' }
+  & { notifications: Array<(
+    { __typename?: 'Notification' }
+    & Pick<Notification, 'id' | 'createdAt'>
+    & { resolvedData: (
+      { __typename?: 'TopicCommentData' }
+      & Pick<TopicCommentData, 'type'>
+      & { comment: (
+        { __typename?: 'Comment' }
+        & Pick<Comment, 'id' | 'html'>
+        & { author: (
+          { __typename?: 'UserPublicInfo' }
+          & Pick<UserPublicInfo, 'username'>
+        ), topic: (
+          { __typename?: 'Topic' }
+          & Pick<Topic, 'id' | 'title' | 'authorId'>
+        ) }
+      ) }
+    ) | (
+      { __typename?: 'CommentReplyData' }
+      & Pick<CommentReplyData, 'type'>
+      & { replyComment: (
+        { __typename?: 'Comment' }
+        & Pick<Comment, 'id' | 'html'>
+        & { author: (
+          { __typename?: 'UserPublicInfo' }
+          & Pick<UserPublicInfo, 'username'>
+        ), topic: (
+          { __typename?: 'Topic' }
+          & Pick<Topic, 'id' | 'title'>
+        ) }
+      ) }
+    ) }
+  )> }
+);
+
+export type NotificationsCountQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type NotificationsCountQuery = (
+  { __typename?: 'Query' }
+  & Pick<Query, 'notificationsCount'>
 );
 
 export type TopicQueryVariables = Exact<{
@@ -408,10 +483,25 @@ export const LikeTopicDocument: DocumentNode = {"kind":"Document","definitions":
 export function useLikeTopicMutation() {
   return Urql.useMutation<LikeTopicMutation, LikeTopicMutationVariables>(LikeTopicDocument);
 };
+export const MarkAllNotificationsAsReadDocument: DocumentNode = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"markAllNotificationsAsRead"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"markAllNotificationsAsRead"}}]}}]};
+
+export function useMarkAllNotificationsAsReadMutation() {
+  return Urql.useMutation<MarkAllNotificationsAsReadMutation, MarkAllNotificationsAsReadMutationVariables>(MarkAllNotificationsAsReadDocument);
+};
 export const NodesForNewTopicDocument: DocumentNode = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"nodesForNewTopic"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"nodes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"slug"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]};
 
 export function useNodesForNewTopicQuery(options: Omit<Urql.UseQueryArgs<NodesForNewTopicQueryVariables>, 'query'> = {}) {
   return Urql.useQuery<NodesForNewTopicQuery>({ query: NodesForNewTopicDocument, ...options });
+};
+export const NotificationsDocument: DocumentNode = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"notifications"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"notifications"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"resolvedData"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"CommentReplyData"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"type"}},{"kind":"Field","name":{"kind":"Name","value":"replyComment"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"html"}},{"kind":"Field","name":{"kind":"Name","value":"author"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"username"}}]}},{"kind":"Field","name":{"kind":"Name","value":"topic"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"title"}}]}}]}}]}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"TopicCommentData"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"type"}},{"kind":"Field","name":{"kind":"Name","value":"comment"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"html"}},{"kind":"Field","name":{"kind":"Name","value":"author"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"username"}}]}},{"kind":"Field","name":{"kind":"Name","value":"topic"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"authorId"}}]}}]}}]}}]}}]}}]}}]};
+
+export function useNotificationsQuery(options: Omit<Urql.UseQueryArgs<NotificationsQueryVariables>, 'query'> = {}) {
+  return Urql.useQuery<NotificationsQuery>({ query: NotificationsDocument, ...options });
+};
+export const NotificationsCountDocument: DocumentNode = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"notificationsCount"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"notificationsCount"}}]}}]};
+
+export function useNotificationsCountQuery(options: Omit<Urql.UseQueryArgs<NotificationsCountQueryVariables>, 'query'> = {}) {
+  return Urql.useQuery<NotificationsCountQuery>({ query: NotificationsCountDocument, ...options });
 };
 export const TopicDocument: DocumentNode = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"topic"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"topicById"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"html"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"likesCount"}},{"kind":"Field","name":{"kind":"Name","value":"isLiked"}},{"kind":"Field","name":{"kind":"Name","value":"node"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"slug"}}]}},{"kind":"Field","name":{"kind":"Name","value":"author"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"username"}},{"kind":"Field","name":{"kind":"Name","value":"avatar"}}]}}]}}]}}]};
 

@@ -1,6 +1,6 @@
 import { useFormik } from 'formik'
 import React from 'react'
-import { Link, useRouteMatch } from 'react-router-dom'
+import { Link, useHistory, useRouteMatch } from 'react-router-dom'
 import { useCreateCommentMutation } from '../generated/graphql'
 import { Button } from './Button'
 
@@ -18,6 +18,7 @@ export const ReplyBox: React.FC<{
   editorRef,
 }) => {
   const route = useRouteMatch()
+  const history = useHistory()
   const [, createCommentMutation] = useCreateCommentMutation()
   const form = useFormik({
     initialValues: {
@@ -33,6 +34,7 @@ export const ReplyBox: React.FC<{
         updateComments()
         hideReplyBox()
         form.resetForm()
+        history.push(`/t/${replyToTopic.id}#comment-${data.createComment.id}`)
       }
     },
   })

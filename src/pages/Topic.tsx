@@ -1,5 +1,5 @@
 import React from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useLocation, useParams } from 'react-router-dom'
 import { useCommentsQuery, useTopicQuery } from '@src/generated/graphql'
 import { Header } from '@src/components/Header'
 import { timeago } from '@src/lib/date'
@@ -16,6 +16,7 @@ import { MainLayout } from '@src/components/MainLayout'
 export const Topic = () => {
   const { user } = useAuth()
   const { topicId } = useParams<{ topicId: string }>()
+  const location = useLocation()
 
   const [replyBoxState, setReplyBoxState] = React.useState<{
     show: boolean
@@ -75,6 +76,16 @@ export const Topic = () => {
   React.useEffect(() => {
     focusReplyEditor()
   }, [replyBoxState.replyToComment?.id])
+
+  React.useEffect(() => {
+    if (!commentsQuery.fetching && location.hash.startsWith('#comment-')) {
+      const $el = document.querySelector<HTMLDivElement>(location.hash)
+      if ($el) {
+        $el.scrollIntoView()
+        $el.focus()
+      }
+    }
+  }, [location.hash, commentsQuery.fetching])
 
   return (
     <>
@@ -169,8 +180,9 @@ export const Topic = () => {
                     return (
                       <div
                         key={comment.id}
-                        className="group px-5 py-5 flex space-x-3"
+                        className="group px-5 py-5 flex space-x-3 focus:bg-yellow-50 focus:outline-none"
                         id={`comment-${comment.id}`}
+                        tabIndex={0}
                       >
                         <div className="flex-shrink-0">
                           <Avatar
