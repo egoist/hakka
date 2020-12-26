@@ -5,8 +5,6 @@ declare namespace NodeJS {
     NODE_ENV: 'production' | 'development'
     PORT: string
     ENCRYPT_SECRET: string
-    GOOGLE_CLIENT_ID?: string
-    GOOGLE_CLIENT_SECRET?: string
     GITHUB_CLIENT_ID?: string
     GITHUB_CLIENT_SECRET?: string
   }
@@ -15,3 +13,5 @@ declare namespace NodeJS {
 type TODO = any
 
 type $TsFixMe = any
+
+type Awaited<T> = T extends PromiseLike<infer U> ? Awaited<U> : T

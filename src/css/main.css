@@ -1,0 +1,78 @@
+:root {
+  --app-bg: #e2e2e2;
+  --border-color: hsl(0, 0%, 80%);
+}
+
+body {
+  background-color: var(--app-bg);
+}
+
+.container {
+  @apply mx-auto;
+  @apply max-w-5xl;
+  @apply px-3;
+}
+
+.main {
+  @apply py-6;
+  @apply mt-14;
+}
+
+.header {
+}
+
+.input,
+.textarea {
+  @apply border;
+  @apply border-gray-200;
+  @apply rounded;
+  @apply px-3;
+  @apply h-12;
+  @apply transition;
+  @apply inline-flex;
+  @apply focus:outline-none;
+  @apply focus:ring-1;
+  @apply focus:ring-blue-500;
+  @apply focus:border-blue-500;
+}
+
+.textarea {
+  @apply h-auto;
+  @apply py-3;
+  @apply resize-none;
+}
+
+.button {
+  @apply bg-blue-500;
+  @apply text-white;
+  @apply rounded-md;
+  @apply px-3;
+  @apply h-10;
+  @apply inline-flex;
+  @apply items-center;
+  @apply justify-center;
+  @apply border;
+  @apply border-blue-500;
+
+  @apply focus:ring-2;
+  @apply focus:ring-blue-200;
+  @apply focus:outline-none;
+}
+
+.button.is-small {
+  @apply h-8;
+  @apply text-xs;
+  @apply px-3;
+}
+
+.button.is-secondary {
+  @apply border-gray-300;
+  @apply bg-gray-50;
+  @apply text-gray-700;
+  @apply focus:ring-gray-400;
+}
+
+.select-node__control {
+  @apply rounded-lg !important;
+  @apply h-12 !important;
+}

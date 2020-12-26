@@ -1,5 +1,7 @@
 node_modules
 dist
+server-dist/
+.next
 .env
 *.log
 .DS_Store

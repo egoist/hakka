@@ -1,0 +1,22 @@
+query topics($page: Int!) {
+  topics(page: $page) {
+    hasNext
+    items {
+      id
+      createdAt
+      title
+      commentsCount
+      likesCount
+      node {
+        id
+        slug
+        name
+      }
+      author {
+        id
+        username
+        avatar
+      }
+    }
+  }
+}

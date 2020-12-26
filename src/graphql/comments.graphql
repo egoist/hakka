@@ -1,0 +1,21 @@
+query comments($topicId: Int!, $page: Int) {
+  comments(topicId: $topicId, page: $page) {
+    total
+    items {
+      id
+      createdAt
+      html
+      author {
+        username
+        avatar
+      }
+      parent {
+        id
+        author {
+          username
+        }
+        html
+      }
+    }
+  }
+}

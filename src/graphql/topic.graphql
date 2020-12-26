@@ -1,0 +1,20 @@
+query topic($id: Int!) {
+  topicById(id: $id) {
+    id
+    title
+    html
+    createdAt
+    likesCount
+    isLiked
+    node {
+      id
+      name
+      slug
+    }
+    author {
+      id
+      username
+      avatar
+    }
+  }
+}

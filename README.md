@@ -6,9 +6,10 @@ cp .env.example .env
 yarn
 
 # Run migrations
-yarn build
+yarn build:server
 yarn migrate:deploy
 
 # Start dev server
+yarn dev:server
 yarn dev
 ```
