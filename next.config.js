@@ -67,7 +67,7 @@ module.exports = {
       callback()
     })
 
-    if (isDev) {
+    if (dev) {
       config.plugins.push(new FixServerReloadPlugin())
     }
 
