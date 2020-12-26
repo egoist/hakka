@@ -1,7 +1,5 @@
 declare namespace NodeJS {
   export interface ProcessEnv {
-    APP_URL: string
-    LOGIN_REDIRECT_PATH: string
     NODE_ENV: 'production' | 'development'
     PORT: string
     ENCRYPT_SECRET: string
