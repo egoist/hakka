@@ -130,8 +130,8 @@ const TopicPage: React.FC<PageProps> = ({ user, topicQuery }) => {
       <Head>
         <title>{title}</title>
         <meta property="og:title" content={title} />
-        <meta property="og:description" content={`登录 HAKKA! 以回复次主题`} />
-        <meta name="description" content={`登录 HAKKA! 以回复次主题`} />
+        <meta property="og:description" content={`登录 HAKKA! 以回复此主题`} />
+        <meta name="description" content={`登录 HAKKA! 以回复此主题`} />
         <meta name="twitter:card" content="summary" />
       </Head>
       <div>
