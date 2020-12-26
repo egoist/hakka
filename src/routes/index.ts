@@ -33,7 +33,6 @@ export default (app: Express) => {
       return res.send({ error: `no refresh token cookie` })
     }
     const repos = await getRepos()
-    console.log(refresh_token)
     const token = await repos.token.findOne({
       where: {
         value: refresh_token,
@@ -41,12 +40,14 @@ export default (app: Express) => {
       relations: ['user'],
     })
     if (!token) {
+      removeRefreshTokenCookie(res)
       return res.send({
         error: `refresh token has expired (not found)`,
       })
     }
     const expiresAt = getExpiresAt(token.createdAt, token.maxAge)
     if (expiresAt < new Date()) {
+      removeRefreshTokenCookie(res)
       return res.send({
         error: `refresh token has expired`,
       })
