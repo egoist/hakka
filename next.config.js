@@ -1,4 +1,40 @@
 const path = require('path')
+const { getConnectionManager } = require('typeorm')
+
+class FixServerReloadPlugin {
+  /**
+   * @param {import('webpack').Compiler} compiler
+   */
+  apply(compiler) {
+    compiler.hooks.afterEmit.tapPromise(
+      'FixServerReloadPlugin',
+      async (compilation) => {
+        const moduleIds = Object.keys(require.cache)
+        const TESTS = [/server-dist/]
+        TESTS.forEach((regex) => {
+          moduleIds.forEach((moduleId) => {
+            if (regex.test(moduleId)) {
+              // console.log(moduleId)
+              delete require.cache[moduleId]
+            }
+          })
+        })
+        // Connection needs to be recreated before entities are recreated
+        const cm = getConnectionManager()
+        if (cm.has('default')) {
+          console.log('Closing connection..')
+          const connection = cm.get('default')
+          await connection.close()
+          cm.connections = cm.connections.filter((c) => c.name !== 'default')
+        }
+      },
+    )
+
+    compiler.hooks.afterCompile.tap('FixServerReloadPlugin', (compilation) => {
+      compilation.contextDependencies.add(path.resolve('server-dist'))
+    })
+  }
+}
 
 module.exports = {
   webpack(config, { dev, isServer }) {
@@ -30,6 +66,10 @@ module.exports = {
       // Continue without externalizing the import
       callback()
     })
+
+    if (isDev) {
+      config.plugins.push(new FixServerReloadPlugin())
+    }
 
     return config
   },
