@@ -1,6 +1,29 @@
 const path = require('path')
 
 module.exports = {
+  async headers() {
+    return [
+      {
+        source: '/api/(.+)',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'private, no-cache, no-store, max-age=0, must-revalidate',
+          },
+        ],
+      },
+      {
+        source: '/(.*)',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'max-age=1, stale-while-revalidate=59',
+          },
+        ],
+      },
+    ]
+  },
+
   webpack(config, { dev, isServer }) {
     // Replace React with Preact in client production build
     if (!dev && !isServer) {
