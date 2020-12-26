@@ -5,7 +5,7 @@
   "author": "EGOIST <0x142857@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "start": "next start",
+    "start": "next start --port $PORT",
     "dev": "next",
     "build": "npm run build:server && next build",
     "dev:server": "ttsc -p server --watch",
