@@ -89,6 +89,12 @@ class CommentsArgs {
   order?: 'DESC' | 'ASC'
 }
 
+@ArgsType()
+class LikeCommentArgs {
+  @Field((type) => Int)
+  commentId: number
+}
+
 @Resolver((of) => Comment)
 export class CommentResolver {
   @Query((returns) => CommentsConnection)
@@ -217,5 +223,60 @@ export class CommentResolver {
       },
     })
     return topic
+  }
+
+  @FieldResolver((returns) => Int)
+  async likesCount(@Root() comment: Comment) {
+    const repos = await getRepos()
+    const count = await repos.userCommentLike.count({
+      where: {
+        commentId: comment.id,
+      },
+    })
+    return count
+  }
+
+  @FieldResolver((returns) => Boolean)
+  async isLiked(@GqlContext() ctx: Context, @Root() comment: Comment) {
+    if (!ctx.user) {
+      return false
+    }
+
+    const repos = await getRepos()
+    const record = await repos.userCommentLike.findOne({
+      where: {
+        userId: ctx.user.id,
+        commentId: comment.id,
+      },
+      select: ['id'],
+    })
+    return Boolean(record)
+  }
+
+  @Mutation((returns) => Boolean)
+  async likeComment(@GqlContext() ctx: Context, @Args() args: LikeCommentArgs) {
+    const user = requireAuth(ctx)
+    const repos = await getRepos()
+    const comment = await repos.comment.findOneOrFail({
+      where: {
+        id: args.commentId,
+      },
+    })
+    let userCommentLike = await repos.userCommentLike.findOne({
+      commentId: comment.id,
+      userId: user.id,
+    })
+    let liked = false
+    if (userCommentLike) {
+      await repos.userCommentLike.remove(userCommentLike)
+    } else {
+      userCommentLike = repos.userCommentLike.create({
+        commentId: comment.id,
+        userId: user.id,
+      })
+      await repos.userCommentLike.save(userCommentLike)
+      liked = true
+    }
+    return liked
   }
 }

@@ -8,6 +8,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm'
 import { Topic } from './topic.entity'
+import { UserCommentLike } from './user-comment-like.entity'
 import { User } from './user.entity'
 
 @Entity()
@@ -46,4 +47,7 @@ export class Comment {
 
   @OneToMany((type) => Comment, (comment) => comment.parent)
   children: Comment[]
+
+  @OneToMany((type) => UserCommentLike, (u) => u.comment)
+  userCommentLikes: UserCommentLike[]
 }

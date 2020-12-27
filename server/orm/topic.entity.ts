@@ -18,10 +18,10 @@ export class Topic {
   id: number
 
   @CreateDateColumn({ type: 'timestamp with time zone' })
-  createdAt: string
+  createdAt: Date
 
   @UpdateDateColumn({ type: 'timestamp with time zone' })
-  updatedAt: string
+  updatedAt: Date
 
   @Column()
   title: string

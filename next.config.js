@@ -1,5 +1,5 @@
 const path = require('path')
-const { getConnectionManager } = require('typeorm')
+const { getConnectionManager, createConnection } = require('typeorm')
 
 class FixServerReloadPlugin {
   /**
@@ -10,7 +10,7 @@ class FixServerReloadPlugin {
       'FixServerReloadPlugin',
       async (compilation) => {
         const moduleIds = Object.keys(require.cache)
-        const TESTS = [/server-dist/]
+        const TESTS = [/server-dist/, /typeorm/]
         TESTS.forEach((regex) => {
           moduleIds.forEach((moduleId) => {
             if (regex.test(moduleId)) {
@@ -19,14 +19,6 @@ class FixServerReloadPlugin {
             }
           })
         })
-        // Connection needs to be recreated before entities are recreated
-        const cm = getConnectionManager()
-        if (cm.has('default')) {
-          console.log('Closing connection..')
-          const connection = cm.get('default')
-          await connection.close()
-          cm.connections = cm.connections.filter((c) => c.name !== 'default')
-        }
       },
     )
 

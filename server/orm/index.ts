@@ -6,6 +6,7 @@ import { Node } from './node.entity'
 import { Token } from './token.entity'
 import { UserTopicLike } from './user-topic-like.entity'
 import { Notification } from './notification.entity'
+import { UserCommentLike } from './user-comment-like.entity'
 
 const CONNECTION_NAME = 'default'
 
@@ -35,6 +36,7 @@ export async function getRepos() {
   const token = connection.getRepository(Token)
   const notification = connection.getRepository(Notification)
   const userTopicLike = connection.getRepository(UserTopicLike)
+  const userCommentLike = connection.getRepository(UserCommentLike)
 
   const repos = {
     user,
@@ -44,6 +46,7 @@ export async function getRepos() {
     token,
     notification,
     userTopicLike,
+    userCommentLike,
   }
 
   return repos

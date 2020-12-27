@@ -153,7 +153,6 @@ export class TopicResolver {
         id: args.id,
       },
     })
-    console.log(topic)
     return topic
   }
 

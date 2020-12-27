@@ -5,6 +5,8 @@ query comments($topicId: Int!, $page: Int) {
       id
       createdAt
       html
+      likesCount
+      isLiked
       author {
         username
         avatar

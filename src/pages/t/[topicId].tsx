@@ -21,7 +21,7 @@ import { AuthUser, getServerSession } from '@server/lib/auth'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { queryGraphql } from '@server/lib/graphql'
-import { topicService } from '@server/services/topic.service'
+import { CommentLikeButton } from '@src/components/CommentLikeButton'
 
 type PageProps = {
   user: AuthUser | null
@@ -264,7 +264,14 @@ const TopicPage: React.FC<PageProps> = ({ user, topicQuery }) => {
                             }}
                           ></div>
                           <div className="mt-2 -ml-2 text-xs text-gray-400 hover:text-gray-600 flex justify-start w-full">
-                            <div className="">
+                            <div className="space-x-3">
+                              <span>
+                                <CommentLikeButton
+                                  count={comment.likesCount}
+                                  commentId={comment.id}
+                                  isLiked={comment.isLiked}
+                                />
+                              </span>
                               <span
                                 onClick={() => {
                                   setReplyBoxState({

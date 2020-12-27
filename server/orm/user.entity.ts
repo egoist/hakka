@@ -10,6 +10,7 @@ import { Comment } from './comment.entity'
 import { Notification } from './notification.entity'
 import { Token } from './token.entity'
 import { Topic } from './topic.entity'
+import { UserCommentLike } from './user-comment-like.entity'
 import { UserTopicLike } from './user-topic-like.entity'
 
 @Entity()
@@ -61,6 +62,9 @@ export class User {
 
   @OneToMany((type) => UserTopicLike, (u) => u.user)
   userTopicLikes: UserTopicLike[]
+
+  @OneToMany((type) => UserCommentLike, (u) => u.user)
+  userCommentLikes: UserCommentLike[]
 
   @OneToMany((type) => Notification, (notification) => notification.user)
   notifications: Notification[]
