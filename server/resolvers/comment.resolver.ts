@@ -16,6 +16,7 @@ import {
 import { SORT_ORDER, UserPublicInfo } from './resolver.types'
 import { renderMarkdown } from '@server/lib/markdown'
 import { Topic } from './topic.resolver'
+import { notificationQueue } from '@server/queues/notification.queue'
 
 @ArgsType()
 class CreateCommentArgs {
@@ -136,48 +137,8 @@ export class CommentResolver {
     })
     await repos.comment.save(comment)
 
-    /// In the future, notifications should be done asynchronously via Bull.js
-
-    // Topic comment notification, insert if the comment author is not the topic author
-    const topic = await repos.topic.findOne({
-      where: {
-        id: args.topicId,
-      },
-    })
-    if (topic && topic.authorId !== comment.authorId) {
-      const topicCommentNotification = repos.notification.create({
-        userId: topic.authorId,
-        data: {
-          type: 'topic-comment',
-          topicId: topic.id,
-          commentId: comment.id,
-        },
-      })
-      await repos.notification.save(topicCommentNotification)
-    }
-
-    // Comment reply notification, insert if the comment author is not the parent comment author
-    const parentComment =
-      args.parentId &&
-      (await repos.comment.findOne({
-        where: {
-          id: args.parentId,
-        },
-      }))
-    if (topic && parentComment && parentComment.authorId !== comment.authorId) {
-      if (parentComment) {
-        const commentReplyNotification = repos.notification.create({
-          userId: parentComment.authorId,
-          data: {
-            type: 'comment-reply',
-            topicId: topic.id,
-            commentId: parentComment.id,
-            replyCommentId: comment.id,
-          },
-        })
-        await repos.notification.save(commentReplyNotification)
-      }
-    }
+    // Add notification
+    notificationQueue.add({ commentId: comment.id })
 
     return comment
   }

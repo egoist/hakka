@@ -15,3 +15,7 @@ export function requireAdmin(user: { id: number }) {
     throw new ApolloError(`Require admin permission`)
   }
 }
+
+export function isAdmin(user: { id: number }) {
+  return ADMIN_IDS.includes(user.id)
+}

@@ -29,6 +29,15 @@ class FixServerReloadPlugin {
 }
 
 module.exports = {
+  rewrites() {
+    return [
+      {
+        source: '/admin/queues/:slug*',
+        destination: '/api/admin/queues',
+      },
+    ]
+  },
+
   webpack(config, { dev, isServer }) {
     // Replace React with Preact in client production build
     if (!dev && !isServer) {
