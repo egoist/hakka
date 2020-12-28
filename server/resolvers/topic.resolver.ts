@@ -1,7 +1,6 @@
 import { Context, GqlContext } from '@server/decorators/gql-context'
 import { requireAuth } from '@server/guards/require-auth'
 import { renderMarkdown } from '@server/lib/markdown'
-import { isURL } from '@server/lib/utils'
 import { getRepos } from '@server/orm'
 import { ApolloError } from 'apollo-server-micro'
 import {
