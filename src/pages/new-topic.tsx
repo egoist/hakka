@@ -159,7 +159,7 @@ const NewTopicPage: React.FC<PageProps> = ({ user }) => {
                 ></textarea>
               </div>
               <div className="mt-5">
-                <Button type="submit">
+                <Button type="submit" isLoading={form.isSubmitting}>
                   {topicId ? `更新主题` : `发表主题`}
                 </Button>
               </div>

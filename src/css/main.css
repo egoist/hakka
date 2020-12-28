@@ -61,6 +61,11 @@ body {
   @apply focus:outline-none;
 }
 
+.button:disabled {
+  @apply opacity-75;
+  @apply cursor-default;
+}
+
 .button.is-small {
   @apply h-8;
   @apply text-xs;

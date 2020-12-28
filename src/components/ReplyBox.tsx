@@ -107,7 +107,11 @@ export const ReplyBox: React.FC<{
                 ></textarea>
                 <div className="mt-2">
                   <div className="space-x-3">
-                    <Button type="submit" size="small">
+                    <Button
+                      type="submit"
+                      size="small"
+                      isLoading={form.isSubmitting}
+                    >
                       回复
                     </Button>
                   </div>
