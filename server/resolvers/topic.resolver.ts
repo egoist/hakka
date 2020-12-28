@@ -1,6 +1,7 @@
 import { Context, GqlContext } from '@server/decorators/gql-context'
 import { requireAuth } from '@server/guards/require-auth'
 import { renderMarkdown } from '@server/lib/markdown'
+import { isURL } from '@server/lib/utils'
 import { getRepos } from '@server/orm'
 import { ApolloError } from 'apollo-server-micro'
 import {
@@ -65,6 +66,18 @@ export class Topic {
 
   @Field((type) => Int)
   nodeId: number
+
+  @Field({
+    nullable: true,
+    description: `A url string if the content is a valid URL`,
+  })
+  url?: string
+
+  @Field({
+    nullable: true,
+    description: `If this topic content is a url, this field will be filled with the domain name`,
+  })
+  domain?: string
 }
 
 @ObjectType()
@@ -132,7 +145,6 @@ export class TopicResolver {
       take: args.take + 1,
       skip,
     })
-
     return {
       items: topics.slice(0, args.take).map((topic) => {
         return {

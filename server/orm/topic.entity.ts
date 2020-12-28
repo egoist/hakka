@@ -6,11 +6,13 @@ import {
   UpdateDateColumn,
   ManyToOne,
   OneToMany,
+  AfterLoad,
 } from 'typeorm'
 import { User } from './user.entity'
 import { Comment } from './comment.entity'
 import { Node } from './node.entity'
 import { UserTopicLike } from './user-topic-like.entity'
+import { parseURL } from '@server/lib/utils'
 
 @Entity()
 export class Topic {
@@ -46,4 +48,16 @@ export class Topic {
 
   @OneToMany((type) => UserTopicLike, (u) => u.topic)
   userTopicLikes: UserTopicLike[]
+
+  url?: string
+  domain?: string
+
+  @AfterLoad()
+  afterLoad() {
+    const url = parseURL(this.content)
+    if (url) {
+      this.url = url.href
+      this.domain = url.hostname.replace(/^www\./, '')
+    }
+  }
 }

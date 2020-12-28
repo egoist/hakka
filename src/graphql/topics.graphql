@@ -7,6 +7,8 @@ query topics($page: Int!) {
       title
       commentsCount
       likesCount
+      url
+      domain
       node {
         id
         slug
