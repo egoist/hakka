@@ -16,7 +16,7 @@ export const Header: React.FC = () => {
     typeof notificationsCountQuery.data?.notificationsCount === 'number' &&
     notificationsCountQuery.data.notificationsCount > 0
   return (
-    <header className="header bg-white z-10 px-5 border-b border-border fixed top-0 left-0 right-0 h-14">
+    <header className="header bg-white z-10 border-b border-border fixed top-0 left-0 right-0 h-14">
       <div className="container h-full">
         <div className="h-full flex items-center justify-between">
           <div className="h-full flex items-center">
