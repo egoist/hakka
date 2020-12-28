@@ -16,6 +16,7 @@ import {
 } from '@src/generated/graphql'
 import { AuthProvider } from '@src/hooks/useAuth'
 import Head from 'next/head'
+import { Footer } from '@src/components/Footer'
 
 type PageProps = {
   topicsQuery: TopicsQuery
@@ -114,6 +115,7 @@ const HomePage: React.FC<PageProps> = ({ topicsQuery, user }) => {
           })}
         </div>
       </MainLayout>
+      <Footer />
     </AuthProvider>
   )
 }

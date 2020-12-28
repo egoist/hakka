@@ -5,6 +5,7 @@ module.exports = {
     extend: {
       colors: {
         'app-bg': 'var(--app-bg)',
+        'main-bg': 'var(--main-bg)',
         border: 'var(--border-color)',
       },
     },

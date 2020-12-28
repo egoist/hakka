@@ -16,6 +16,7 @@ import { GetServerSideProps } from 'next'
 import { AuthUser, getServerSession } from '@server/lib/auth'
 import { AuthProvider } from '@src/hooks/useAuth'
 import Head from 'next/head'
+import { Footer } from '@src/components/Footer'
 
 type PageProps = {
   user: AuthUser | null
@@ -166,6 +167,7 @@ const NewTopicPage: React.FC<PageProps> = ({ user }) => {
           </Box>
         </form>
       </MainLayout>
+      <Footer />
     </AuthProvider>
   )
 }

@@ -1,10 +1,10 @@
 :root {
-  --app-bg: #e2e2e2;
+  --main-bg: #e2e2e2;
   --border-color: hsl(0, 0%, 80%);
 }
 
 body {
-  background-color: var(--app-bg);
+  background-color: white;
 }
 
 .container {
@@ -14,8 +14,10 @@ body {
 }
 
 .main {
-  @apply py-6;
+  @apply pt-6;
+  @apply pb-12;
   @apply mt-14;
+  background-color: var(--main-bg);
 }
 
 .header {

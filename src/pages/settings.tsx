@@ -1,4 +1,5 @@
 import { AuthUser, getServerSession } from '@server/lib/auth'
+import { Footer } from '@src/components/Footer'
 import { Header } from '@src/components/Header'
 import { MainLayout } from '@src/components/MainLayout'
 import { AuthProvider } from '@src/hooks/useAuth'
@@ -39,6 +40,7 @@ const SettingsPage: React.FC<PageProps> = ({ user }) => {
       </Head>
       <Header />
       <MainLayout>暂时不能更改个人资料</MainLayout>
+      <Footer />
     </AuthProvider>
   )
 }

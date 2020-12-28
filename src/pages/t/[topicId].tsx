@@ -22,6 +22,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { queryGraphql } from '@server/lib/graphql'
 import { CommentLikeButton } from '@src/components/CommentLikeButton'
+import { Footer } from '@src/components/Footer'
 
 type PageProps = {
   user: AuthUser | null
@@ -312,6 +313,8 @@ const TopicPage: React.FC<PageProps> = ({ user, topicQuery }) => {
             </Box>
           )}
         </MainLayout>
+
+        <Footer />
       </div>
 
       <div style={{ marginBottom: `${marginBottom}px` }}></div>

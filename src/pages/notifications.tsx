@@ -11,6 +11,7 @@ import { AuthUser, getServerSession } from '@server/lib/auth'
 import { GetServerSideProps } from 'next'
 import { AuthProvider } from '@src/hooks/useAuth'
 import Head from 'next/head'
+import { Footer } from '@src/components/Footer'
 
 type PageProps = {
   user: AuthUser | null
@@ -133,6 +134,7 @@ const NotificationsPage: React.FC<PageProps> = ({ user }) => {
           </div>
         </Box>
       </MainLayout>
+      <Footer />
     </AuthProvider>
   )
 }
