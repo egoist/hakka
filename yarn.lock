@@ -561,6 +561,11 @@
     lodash "^4.17.19"
     to-fast-properties "^2.0.0"
 
+"@badrap/bar-of-progress@^0.1.1":
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/@badrap/bar-of-progress/-/bar-of-progress-0.1.1.tgz#f9b3023b50c182bbace984c6384244cc2a5f4f2c"
+  integrity sha512-71I3n/S8x9a/KW8JMboNRlDz0TLOI0YEjBjw3OxrwSzoJ9EZd46eaS5IIKn9XfBouJB3Kquzih/KrlvZtj2w/Q==
+
 "@egoist/prettier-config@0.1.0":
   version "0.1.0"
   resolved "https://registry.npmjs.org/@egoist/prettier-config/-/prettier-config-0.1.0.tgz#242974598c11c0efd80f63cedde3b41a6cda1fdb"
@@ -1462,11 +1467,6 @@
   version "10.17.50"
   resolved "https://registry.npmjs.org/@types/node/-/node-10.17.50.tgz#7a20902af591282aa9176baefc37d4372131c32d"
   integrity sha512-vwX+/ija9xKc/z9VqMCdbf4WYcMTGsI0I/L/6shIF3qXURxZOhPQlPRHtjTpiNhAwn0paMJzlOQqw6mAGEQnTA==
-
-"@types/nprogress@^0.2.0":
-  version "0.2.0"
-  resolved "https://registry.npmjs.org/@types/nprogress/-/nprogress-0.2.0.tgz#86c593682d4199212a0509cc3c4d562bbbd6e45f"
-  integrity sha512-1cYJrqq9GezNFPsWTZpFut/d4CjpZqA0vhqDUPFWYKF1oIyBz5qnoYMzR+0C/T96t3ebLAC1SSnwrVOm5/j74A==
 
 "@types/oauth@*":
   version "0.9.1"
@@ -6544,11 +6544,6 @@ npmlog@^4.0.1, npmlog@^4.1.2:
     console-control-strings "~1.1.0"
     gauge "~2.7.3"
     set-blocking "~2.0.0"
-
-nprogress@^0.2.0:
-  version "0.2.0"
-  resolved "https://registry.npmjs.org/nprogress/-/nprogress-0.2.0.tgz#cb8f34c53213d895723fcbab907e9422adbcafb1"
-  integrity sha1-y480xTIT2JVyP8urkH6UIq28r7E=
 
 nullthrows@^1.1.1:
   version "1.1.1"

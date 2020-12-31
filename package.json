@@ -25,6 +25,7 @@
     ]
   },
   "dependencies": {
+    "@badrap/bar-of-progress": "^0.1.1",
     "@hapi/iron": "^6.0.0",
     "@headlessui/react": "^0.2.0",
     "apollo-server-micro": "^2.19.1",
@@ -46,7 +47,6 @@
     "nanoid": "3.1.20",
     "next": "^10.0.4",
     "next-connect": "^0.9.1",
-    "nprogress": "^0.2.0",
     "passport": "0.4.1",
     "passport-github": "1.1.0",
     "pg": "^8.5.1",
@@ -74,7 +74,6 @@
     "@types/jsonwebtoken": "8.5.0",
     "@types/markdown-it": "12.0.0",
     "@types/ms": "^0.7.31",
-    "@types/nprogress": "^0.2.0",
     "@types/passport": "1.0.4",
     "@types/passport-github": "1.1.5",
     "@types/react": "^17.0.0",
