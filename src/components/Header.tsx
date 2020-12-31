@@ -41,12 +41,12 @@ export const Header: React.FC = () => {
             </span>
           </div>
           {user && (
-            <div className="flex space-x-3 md:space-x-8 items-center text-gray-600">
-              <div>
+            <div className="flex space-x-3 md:space-x-8 items-center text-gray-600 h-full">
+              <div className="h-full">
                 <Link href="/notifications">
                   <a
                     className={clsx(
-                      `relative`,
+                      `relative inline-flex h-full items-center`,
                       `hover:text-blue-500`,
                     )}
                   >
