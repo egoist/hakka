@@ -46,7 +46,7 @@ export const Header: React.FC = () => {
                 <Link href="/notifications">
                   <a
                     className={clsx(
-                      `inline-block relative`,
+                      `relative`,
                       `hover:text-blue-500`,
                     )}
                   >
