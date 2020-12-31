@@ -41,35 +41,32 @@ export const Header: React.FC = () => {
             </span>
           </div>
           {user && (
-            <div className="flex space-x-3 md:space-x-8 items-center text-gray-600 h-full">
-              <div className="h-full">
-                <Link href="/notifications">
-                  <a
-                    className={clsx(
-                      `relative inline-flex h-full items-center`,
-                      `hover:text-blue-500`,
-                    )}
+            <div className="flex space-x-3 md:space-x-8 items-center text-gray-600">
+              <Link href="/notifications">
+                <a
+                  className={clsx(
+                    `relative inline-flex w-5 h-5`,
+                    `hover:text-blue-500`,
+                  )}
+                >
+                  <svg
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                    className="w-full h-full"
                   >
-                    <svg
-                      focusable="false"
-                      width="1.2em"
-                      height="1.2em"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        d="M21 19v1H3v-1l2-2v-6c0-3.1 2.03-5.83 5-6.71V4a2 2 0 0 1 2-2a2 2 0 0 1 2 2v.29c2.97.88 5 3.61 5 6.71v6l2 2m-7 2a2 2 0 0 1-2 2a2 2 0 0 1-2-2"
-                        fill="currentColor"
-                      ></path>
-                    </svg>
-                    {hasNotifications && (
-                      <span className="flex h-2 w-2 absolute top-0 right-0 transform translate-x-1 -translate-y-1">
-                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-                        <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
-                      </span>
-                    )}
-                  </a>
-                </Link>
-              </div>
+                    <path
+                      d="M21 19v1H3v-1l2-2v-6c0-3.1 2.03-5.83 5-6.71V4a2 2 0 0 1 2-2a2 2 0 0 1 2 2v.29c2.97.88 5 3.61 5 6.71v6l2 2m-7 2a2 2 0 0 1-2 2a2 2 0 0 1-2-2"
+                      fill="currentColor"
+                    ></path>
+                  </svg>
+                  {hasNotifications && (
+                    <span className="flex h-2 w-2 absolute top-0 right-0 transform translate-x-1 -translate-y-1">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                      <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
+                    </span>
+                  )}
+                </a>
+              </Link>
               <div className="relative">
                 <Menu>
                   {({ open }) => (
