@@ -9,7 +9,9 @@ import Router from 'next/router'
 if (process.browser) {
   const ProgressBar: typeof import('@badrap/bar-of-progress') = require('@badrap/bar-of-progress')
 
-  const progress = new ProgressBar.default()
+  const progress = new ProgressBar.default({
+    size: 3,
+  })
 
   Router.events.on('routeChangeStart', () => {
     progress.start()
