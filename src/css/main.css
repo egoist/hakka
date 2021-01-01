@@ -9,19 +9,16 @@ body {
   background-color: var(--body-bg);
 }
 
-.h-screen {
-  /* Try to fix 100vh on mobile safari
-   * https://allthingssmitty.com/2020/05/11/css-fix-for-100vh-in-mobile-webkit/
-   */
-  min-height: -webkit-fill-available;
-}
-
 .main {
   @apply xl:max-w-7xl;
   @apply h-screen;
   @apply mx-auto;
   @apply bg-main-bg;
   @apply flex;
+  /* Try to fix 100vh on mobile safari
+   * https://allthingssmitty.com/2020/05/11/css-fix-for-100vh-in-mobile-webkit/
+   */
+  min-height: -webkit-fill-available;
 }
 
 .left-panel {
