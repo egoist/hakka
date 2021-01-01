@@ -137,6 +137,15 @@ export class CommentResolver {
     })
     await repos.comment.save(comment)
 
+    await repos.topic.update(
+      {
+        id: args.topicId,
+      },
+      {
+        lastCommentId: comment.id,
+      },
+    )
+
     // Add notification
     notificationQueue.add({ commentId: comment.id })
 

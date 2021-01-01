@@ -7,6 +7,8 @@ import {
   ManyToOne,
   OneToMany,
   AfterLoad,
+  OneToOne,
+  JoinColumn,
 } from 'typeorm'
 import { User } from './user.entity'
 import { Comment } from './comment.entity'
@@ -48,6 +50,13 @@ export class Topic {
 
   @OneToMany((type) => UserTopicLike, (u) => u.topic)
   userTopicLikes: UserTopicLike[]
+
+  @Column({ nullable: true })
+  lastCommentId?: number
+
+  @OneToOne((type) => Comment, { nullable: true, onDelete: 'SET NULL' })
+  @JoinColumn()
+  lastComment?: Comment
 
   url?: string
   domain?: string

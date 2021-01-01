@@ -11,10 +11,10 @@ import {
   Query,
   Resolver,
   ObjectType,
-  ID,
   Mutation,
   FieldResolver,
   Root,
+  registerEnumType,
 } from 'type-graphql'
 import { Node } from './node.resolver'
 
@@ -140,17 +140,11 @@ export class TopicResolver {
       order: {
         createdAt: 'DESC',
       },
-      relations: ['comments', 'author'],
       take: args.take + 1,
       skip,
     })
     return {
-      items: topics.slice(0, args.take).map((topic) => {
-        return {
-          ...topic,
-          commentsCount: topic.comments.length,
-        }
-      }),
+      items: topics.slice(0, args.take),
       hasNext: topics.length > args.take,
       hasPrev: args.page !== 1,
     }
