@@ -15,14 +15,11 @@ body {
   @apply mx-auto;
   @apply bg-main-bg;
   @apply flex;
-  /* Try to fix 100vh on mobile safari
-   * https://allthingssmitty.com/2020/05/11/css-fix-for-100vh-in-mobile-webkit/
-   */
-  min-height: -webkit-fill-available;
 }
 
 .left-panel {
   width: 100%;
+  @apply relative;
 }
 
 .left-panel.is-hidden {
@@ -41,11 +38,25 @@ body {
 
 .panel-header {
   height: var(--panel-header-height);
+  @apply fixed;
+  @apply w-full;
+  @apply bg-white;
 }
 
 .panel-content {
-  height: calc(100% - var(--panel-header-height));
-  @apply overflow-y-auto;
+  padding-top: var(--panel-header-height);
+  @apply bg-white;
+}
+
+@screen md {
+  .panel-header {
+    @apply relative;
+  }
+  .panel-content {
+    height: calc(100% - var(--panel-header-height));
+    @apply overflow-y-auto;
+    @apply pt-0;
+  }
 }
 
 .input,

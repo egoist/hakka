@@ -8,6 +8,11 @@ export const MainPanel: React.FC<{ title?: string }> = ({
 }) => {
   const router = useRouter()
   const handleClickBackButton = () => {
+    // Back home if browsing on mobile devices
+    if (window.matchMedia('(max-width: 768px)').matches) {
+      router.push('/')
+      return
+    }
     router.back()
   }
   const setHideLeftPanel = useStore((state) => state.setHideLeftPanel)
