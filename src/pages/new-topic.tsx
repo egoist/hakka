@@ -103,14 +103,15 @@ const NewTopicPage: React.FC<PageProps> = ({ user }) => {
     }
   }, [topicQuery.fetching])
 
+  const title = topicId ? `编辑主题` : `创建主题`
   return (
     <AuthProvider value={user}>
       <Head>
-        <title>创建主题</title>
+        <title>{title}</title>
       </Head>
       <div className="main">
         <LeftPanel />
-        <MainPanel title="创建主题">
+        <MainPanel title={title}>
           <div className="p-8">
             <form className="" onSubmit={form.handleSubmit}>
               <div className=" mb-4">

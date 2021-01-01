@@ -133,6 +133,11 @@ const TopicPage: React.FC<PageProps> = ({ user, topicQuery }) => {
                   <span className="ml-3 text-xs text-gray-400">
                     {timeago(topic.createdAt)}
                   </span>
+                  <span className="ml-3 text-xs">
+                    <Link href={`/edit-topic/${topic.id}`}>
+                      <a className="text-blue-300">编辑</a>
+                    </Link>
+                  </span>
                 </div>
                 <h1 className="text-xl font-medium">{topic.title}</h1>
                 <div className="mt-3">

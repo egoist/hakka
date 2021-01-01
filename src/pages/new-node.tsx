@@ -52,7 +52,6 @@ const NewNodePage: React.FC<PageProps> = ({ user }) => {
       image: undefined,
     },
     async onSubmit(values) {
-      console.log('??')
       const { data } = await createNodeMutation({
         name: values.name,
         description: values.description,
