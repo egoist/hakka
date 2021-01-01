@@ -1,5 +1,17 @@
 import create from 'zustand'
 
-type State = {}
+type State = {
+  hideLeftPanel: boolean
 
-export const useStore = create<State>((set) => ({}))
+  setHideLeftPanel: (hide: boolean) => void
+}
+
+export const useStore = create<State>((set) => ({
+  hideLeftPanel: false,
+
+  setHideLeftPanel(hide: boolean) {
+    set({
+      hideLeftPanel: hide,
+    })
+  },
+}))

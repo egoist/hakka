@@ -9,14 +9,17 @@ export const CommentLikeButton: React.FC<{
   isLiked: boolean
 }> = ({ count, commentId, isLiked }) => {
   const { user } = useAuth()
+  const [isSubmitting, setIsSubmitting] = React.useState(false)
   const [, likeCommentMutation] = useLikeCommentMutation()
   const [actualCount, setActualCount] = React.useState(count)
   const [actualIsLiked, setActualIsLiked] = React.useState(isLiked)
   const handleClick = async () => {
-    if (!user) return
+    if (!user || isSubmitting) return
+    setIsSubmitting(true)
     const { data } = await likeCommentMutation({
       commentId,
     })
+    setIsSubmitting(false)
     if (data) {
       if (data.likeComment) {
         setActualCount(actualCount + 1)
@@ -30,7 +33,7 @@ export const CommentLikeButton: React.FC<{
   return (
     <button
       className={clsx(
-        `inline-flex items-center  px-2 h-7 transition rounded-md hover:bg-gray-200`,
+        `inline-flex items-center  px-2 h-7 transition rounded-md hover:bg-gray-200 focus:outline-none`,
         !actualIsLiked && `border-gray-500`,
         actualIsLiked && `text-red-500`,
         !user && 'cursor-default',

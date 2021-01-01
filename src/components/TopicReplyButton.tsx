@@ -5,7 +5,7 @@ export const TopicReplyButton: React.FC<{
 }> = ({ onClick }) => {
   return (
     <button
-      className="inline-flex items-center px-2 h-7 rounded-md transition hover:bg-gray-200"
+      className="inline-flex items-center px-2 h-7 rounded-md transition hover:bg-gray-200 focus:outline-none"
       onClick={onClick}
     >
       <svg focusable="false" width="1em" height="1em" viewBox="0 0 20 20">

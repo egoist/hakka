@@ -1,10 +1,10 @@
 import React from 'react'
-import { Header } from '@src/components/Header'
 import { AuthUser, getServerSession } from '@server/lib/auth'
 import { GetServerSideProps } from 'next'
 import { AuthProvider } from '@src/hooks/useAuth'
 import Head from 'next/head'
-import { Footer } from '@src/components/Footer'
+import { LeftPanel } from '@src/components/LeftPanel'
+import { MainPanel } from '@src/components/MainPanel'
 
 type PageProps = {
   user: AuthUser | null
@@ -37,11 +37,11 @@ const LoginPage: React.FC<PageProps> = ({ user }) => {
       <Head>
         <title>登录 - HAKKA!</title>
       </Head>
-      <Header />
       <div className="main">
-        <div className="flex justify-center">
-          <div className="inline-block text-center my-8">
-            <h2 className="mb-5 text-xl font-medium">欢迎回来</h2>
+        <LeftPanel />
+        <MainPanel title="登录">
+          <div className="text-center p-8">
+            <h2 className="text-xl font-medium">欢迎回来</h2>
             <div className="p-5 bg-white rounded-md">
               <a className="button" href={`/api/connect/github`}>
                 <svg
@@ -60,9 +60,8 @@ const LoginPage: React.FC<PageProps> = ({ user }) => {
               </a>
             </div>
           </div>
-        </div>
+        </MainPanel>
       </div>
-      <Footer />
     </AuthProvider>
   )
 }

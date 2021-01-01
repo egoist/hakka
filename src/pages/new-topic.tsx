@@ -1,4 +1,3 @@
-import { Header } from '@src/components/Header'
 import React from 'react'
 import { Button } from '@src/components/Button'
 import { useFormik } from 'formik'
@@ -9,14 +8,13 @@ import {
   useUpdateTopicMutation,
 } from '@src/generated/graphql'
 import Select from 'react-select'
-import { Box } from '@src/components/Box'
-import { MainLayout } from '@src/components/MainLayout'
 import { useRouter } from 'next/router'
 import { GetServerSideProps } from 'next'
 import { AuthUser, getServerSession } from '@server/lib/auth'
 import { AuthProvider } from '@src/hooks/useAuth'
 import Head from 'next/head'
-import { Footer } from '@src/components/Footer'
+import { LeftPanel } from '@src/components/LeftPanel'
+import { MainPanel } from '@src/components/MainPanel'
 
 type PageProps = {
   user: AuthUser | null
@@ -110,64 +108,65 @@ const NewTopicPage: React.FC<PageProps> = ({ user }) => {
       <Head>
         <title>创建主题</title>
       </Head>
-      <Header />
-      <MainLayout>
-        <form className="" onSubmit={form.handleSubmit}>
-          <div className=" mb-4">
-            <Select
-              name="nodeId"
-              id="topic-node"
-              classNamePrefix="select-node"
-              placeholder="选择一个节点"
-              value={selectNodeOptions?.find(
-                (option) => option.value === form.values.nodeId,
-              )}
-              // Use this for debugging:
-              // menuIsOpen={true}
-              onChange={(option) => {
-                if (option) {
-                  form.setFieldValue('nodeId', option.value)
-                }
-              }}
-              options={selectNodeOptions}
-              noOptionsMessage={() => `找不到匹配的节点`}
-            />
-          </div>
-          <Box>
-            <div className="p-5">
-              <input
-                type="text"
-                name="title"
-                id="topic-title"
-                required
-                placeholder="标题"
-                className="input w-full"
-                value={form.values.title}
-                onChange={form.handleChange}
-                onBlur={form.handleBlur}
-              />
-              <div className="mt-3">
-                <textarea
-                  id="topic-content"
-                  name="content"
-                  className="textarea w-full"
-                  rows={10}
-                  placeholder="内容"
-                  value={form.values.content}
+      <div className="main">
+        <LeftPanel />
+        <MainPanel title="创建主题">
+          <div className="p-8">
+            <form className="" onSubmit={form.handleSubmit}>
+              <div className=" mb-4">
+                <Select
+                  name="nodeId"
+                  id="topic-node"
+                  classNamePrefix="select-node"
+                  placeholder="选择一个节点"
+                  value={selectNodeOptions?.find(
+                    (option) => option.value === form.values.nodeId,
+                  )}
+                  // Use this for debugging:
+                  // menuIsOpen={true}
+                  onChange={(option) => {
+                    if (option) {
+                      form.setFieldValue('nodeId', option.value)
+                    }
+                  }}
+                  options={selectNodeOptions}
+                  noOptionsMessage={() => `找不到匹配的节点`}
+                />
+              </div>
+              <div className="">
+                <input
+                  type="text"
+                  name="title"
+                  id="topic-title"
+                  required
+                  placeholder="标题"
+                  className="input w-full"
+                  value={form.values.title}
                   onChange={form.handleChange}
                   onBlur={form.handleBlur}
-                ></textarea>
+                />
+                <div className="mt-3">
+                  <textarea
+                    id="topic-content"
+                    name="content"
+                    className="textarea w-full"
+                    rows={10}
+                    placeholder="内容"
+                    value={form.values.content}
+                    onChange={form.handleChange}
+                    onBlur={form.handleBlur}
+                  ></textarea>
+                </div>
+                <div className="mt-5">
+                  <Button type="submit" isLoading={form.isSubmitting}>
+                    {topicId ? `更新主题` : `发表主题`}
+                  </Button>
+                </div>
               </div>
-              <div className="mt-5">
-                <Button type="submit" isLoading={form.isSubmitting}>
-                  {topicId ? `更新主题` : `发表主题`}
-                </Button>
-              </div>
-            </div>
-          </Box>
-        </form>
-      </MainLayout>
-      <Footer />
+            </form>
+          </div>
+        </MainPanel>
+      </div>
     </AuthProvider>
   )
 }

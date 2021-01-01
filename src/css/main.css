@@ -1,32 +1,57 @@
 :root {
-  --main-bg: #e2e2e2;
-  --border-color: hsl(0, 0%, 80%);
+  --body-bg: #e5e5e5;
+  --main-bg: #f6f6f6;
+  --border-color: #e0e0e0;
+  --panel-header-height: 50px;
 }
 
 body {
-  background-color: white;
-}
-
-.container {
-  @apply mx-auto;
-  @apply max-w-5xl;
-  @apply px-3;
-}
-
-.main {
-  @apply pt-6;
-  @apply pb-12;
-  @apply mt-14;
-  background-color: var(--main-bg);
+  background-color: var(--body-bg);
 }
 
 .header {
 }
 
+.main {
+  @apply max-w-5xl;
+  @apply xl:max-w-7xl;
+  @apply h-screen;
+  @apply mx-auto;
+  @apply bg-main-bg;
+  @apply flex;
+}
+
+.left-panel {
+  width: 100%;
+}
+
+.left-panel.is-hidden {
+  display: none;
+}
+
+@screen md {
+  .left-panel {
+    width: 380px;
+  }
+
+  .left-panel.is-hidden {
+    display: block;
+  }
+}
+
+.panel-header {
+  height: var(--panel-header-height);
+}
+
+.panel-content {
+  height: calc(100% - var(--panel-header-height));
+  @apply overflow-y-auto;
+}
+
 .input,
 .textarea {
   @apply border;
-  @apply border-gray-200;
+  @apply border-border;
   @apply rounded;
   @apply px-3;
   @apply h-12;
@@ -80,6 +105,7 @@ body {
 }
 
 .select-node__control {
-  @apply rounded-lg !important;
+  @apply rounded-md !important;
   @apply h-12 !important;
+  @apply border-border !important;
 }

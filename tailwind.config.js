@@ -4,7 +4,7 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        'app-bg': 'var(--app-bg)',
+        'body-bg': 'var(--body-bg)',
         'main-bg': 'var(--main-bg)',
         border: 'var(--border-color)',
       },
