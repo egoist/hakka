@@ -17,7 +17,6 @@ body {
 }
 
 .main {
-  @apply max-w-5xl;
   @apply xl:max-w-7xl;
   @apply h-screen;
   @apply mx-auto;
