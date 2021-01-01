@@ -24,6 +24,7 @@ import { useFormik } from 'formik'
 import { stripHTML } from '@src/lib/utils'
 import { Button } from '@src/components/Button'
 import { queryGraphql } from '@server/lib/graphql'
+import { Spinner } from '@src/components/Spinner'
 
 type PageProps = {
   user: AuthUser | null
@@ -113,7 +114,7 @@ const TopicPage: React.FC<PageProps> = ({ user, topicQuery }) => {
       </Head>
       <div className="main">
         <LeftPanel />
-        <MainPanel title="主题详情">
+        <MainPanel key={topicId} title="主题详情">
           {topic && (
             <div className="">
               <div className="px-8 py-8 bg-white border-b border-border">
@@ -157,6 +158,12 @@ const TopicPage: React.FC<PageProps> = ({ user, topicQuery }) => {
                   />
                 </div>
               </div>
+            </div>
+          )}
+
+          {!comments && (
+            <div className="flex justify-center items-center p-8">
+              <Spinner />
             </div>
           )}
 
