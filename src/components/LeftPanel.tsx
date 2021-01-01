@@ -13,27 +13,45 @@ import { useStore } from '@src/lib/store'
 import { Spinner } from './Spinner'
 
 const DropdownMenu = () => {
+  const { user } = useAuth()
   return (
     <div
       className="absolute bottom-0 left-0 right-0 bg-white"
       style={{ top: 'var(--panel-header-height)' }}
     >
-      <a
-        href="/api/logout"
-        className="p-3 flex items-center space-x-2 hover:bg-gray-100"
-      >
-        <svg focusable="false" width="1em" height="1em" viewBox="0 0 24 24">
-          <path
-            d="M6 2h9a2 2 0 0 1 2 2v2h-2V4H6v16h9v-2h2v2a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2z"
-            fill="currentColor"
-          ></path>
-          <path
-            d="M16.09 15.59L17.5 17l5-5l-5-5l-1.41 1.41L18.67 11H9v2h9.67z"
-            fill="currentColor"
-          ></path>
-        </svg>
-        <span>登出账号</span>
-      </a>
+      {!user && (
+        <a
+          href="/login"
+          className="p-3 flex items-center space-x-2 hover:bg-gray-100"
+        >
+          <svg focusable="false" width="1em" height="1em" viewBox="0 0 24 24">
+            <path
+              d="M9.586 11L7.05 8.464L8.464 7.05l4.95 4.95l-4.95 4.95l-1.414-1.414L9.586 13H3v-2h6.586zM11 3h8c1.1 0 2 .9 2 2v14c0 1.1-.9 2-2 2h-8v-2h8V5h-8V3z"
+              fill="currentColor"
+              fillRule="evenodd"
+            ></path>
+          </svg>
+          <span>登录</span>
+        </a>
+      )}
+      {user && (
+        <a
+          href="/api/logout"
+          className="p-3 flex items-center space-x-2 hover:bg-gray-100"
+        >
+          <svg focusable="false" width="1em" height="1em" viewBox="0 0 24 24">
+            <path
+              d="M6 2h9a2 2 0 0 1 2 2v2h-2V4H6v16h9v-2h2v2a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2z"
+              fill="currentColor"
+            ></path>
+            <path
+              d="M16.09 15.59L17.5 17l5-5l-5-5l-1.41 1.41L18.67 11H9v2h9.67z"
+              fill="currentColor"
+            ></path>
+          </svg>
+          <span>登出账号</span>
+        </a>
+      )}
       <a
         href="https://github.com/egoist/hakka"
         target="_blank"
