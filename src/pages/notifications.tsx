@@ -1,17 +1,15 @@
 import React from 'react'
-import { Header } from '@src/components/Header'
-import { MainLayout } from '@src/components/MainLayout'
 import {
   useNotificationsQuery,
   useMarkAllNotificationsAsReadMutation,
 } from '@src/generated/graphql'
-import { Box } from '@src/components/Box'
 import Link from 'next/link'
 import { AuthUser, getServerSession } from '@server/lib/auth'
 import { GetServerSideProps } from 'next'
 import { AuthProvider } from '@src/hooks/useAuth'
 import Head from 'next/head'
-import { Footer } from '@src/components/Footer'
+import { LeftPanel } from '@src/components/LeftPanel'
+import { MainPanel } from '@src/components/MainPanel'
 
 type PageProps = {
   user: AuthUser | null
@@ -57,9 +55,9 @@ const NotificationsPage: React.FC<PageProps> = ({ user }) => {
       <Head>
         <title>消息 - HAKKA!</title>
       </Head>
-      <Header />
-      <MainLayout>
-        <Box>
+      <div className="main">
+        <LeftPanel />
+        <MainPanel title="消息">
           <div className="divide-y">
             {items && items.length === 0 && (
               <div className="text-center p-5">没有新消息</div>
@@ -132,9 +130,8 @@ const NotificationsPage: React.FC<PageProps> = ({ user }) => {
                 )
               })}
           </div>
-        </Box>
-      </MainLayout>
-      <Footer />
+        </MainPanel>
+      </div>
     </AuthProvider>
   )
 }

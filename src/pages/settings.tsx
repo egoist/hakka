@@ -1,7 +1,6 @@
 import { AuthUser, getServerSession } from '@server/lib/auth'
-import { Footer } from '@src/components/Footer'
-import { Header } from '@src/components/Header'
-import { MainLayout } from '@src/components/MainLayout'
+import { LeftPanel } from '@src/components/LeftPanel'
+import { MainPanel } from '@src/components/MainPanel'
 import { AuthProvider } from '@src/hooks/useAuth'
 import { GetServerSideProps } from 'next'
 import Head from 'next/head'
@@ -38,9 +37,10 @@ const SettingsPage: React.FC<PageProps> = ({ user }) => {
       <Head>
         <title>设置 - HAKKA!</title>
       </Head>
-      <Header />
-      <MainLayout>暂时不能更改个人资料</MainLayout>
-      <Footer />
+      <LeftPanel />
+      <MainPanel title="设置">
+        <div className="p-8">暂时不能更改个人资料</div>
+      </MainPanel>
     </AuthProvider>
   )
 }

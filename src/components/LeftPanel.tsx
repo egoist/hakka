@@ -1,7 +1,10 @@
 import Link from 'next/link'
 import { timeago } from '@src/lib/date'
 import { Avatar } from '@src/components/Avatar'
-import { useTopicsQuery } from '@src/generated/graphql'
+import {
+  useNotificationsCountQuery,
+  useTopicsQuery,
+} from '@src/generated/graphql'
 import { useRouter } from 'next/router'
 import clsx from 'clsx'
 import { useAuth } from '@src/hooks/useAuth'
@@ -57,6 +60,14 @@ export const LeftPanel = () => {
     },
     requestPolicy: 'cache-and-network',
   })
+  const [notificationsCountQuery] = useNotificationsCountQuery({
+    pause: !user,
+    requestPolicy: 'cache-and-network',
+    pollInterval: 30 * 1000,
+  })
+  const hasNotifications =
+    typeof notificationsCountQuery.data?.notificationsCount === 'number' &&
+    notificationsCountQuery.data.notificationsCount > 0
   const router = useRouter()
   const topicId =
     typeof router.query.topicId === 'string'
@@ -127,6 +138,30 @@ export const LeftPanel = () => {
               </g>
             </svg>
           </button>
+          {user && (
+            <Link href="/notifications">
+              <a className="h-full w-12 inline-flex justify-center items-center hover:bg-gray-100 focus:outline-none">
+                <span className="relative">
+                  <svg
+                    focusable="false"
+                    className="w-5 h-5"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M16 17H7v-6.5C7 8 9 6 11.5 6S16 8 16 10.5m2 5.5v-5.5c0-3.07-2.14-5.64-5-6.32V3.5A1.5 1.5 0 0 0 11.5 2A1.5 1.5 0 0 0 10 3.5v.68c-2.87.68-5 3.25-5 6.32V16l-2 2v1h17v-1m-8.5 4a2 2 0 0 0 2-2h-4a2 2 0 0 0 2 2z"
+                      fill="currentColor"
+                    ></path>
+                  </svg>
+                  {hasNotifications && (
+                    <span className="flex h-2 w-2 absolute top-0 right-0 transform translate-x-1 -translate-y-1">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                      <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
+                    </span>
+                  )}
+                </span>
+              </a>
+            </Link>
+          )}
           {user && (
             <Link href="/new-topic">
               <a className="h-full w-12 inline-flex justify-center items-center hover:bg-gray-100 focus:outline-none">
