@@ -63,16 +63,12 @@ export const getServerSideProps: GetServerSideProps<PageProps> = async (
 
 const TopicPage: React.FC<PageProps> = ({ user, topicQuery }) => {
   const router = useRouter()
-  const topicId =
-    typeof router.query.topicId === 'string'
-      ? Number(router.query.topicId)
-      : undefined
+  const topicId = Number(router.query.topicId)
   const [commentsQuery, refetchComments] = useCommentsQuery({
     variables: {
       topicId: topicId!,
     },
-    pause: !topicId,
-    requestPolicy: 'cache-and-network',
+    requestPolicy: 'network-only',
   })
   const topic = topicQuery.topicById
   const comments = commentsQuery.data?.comments
@@ -117,7 +113,7 @@ const TopicPage: React.FC<PageProps> = ({ user, topicQuery }) => {
       </Head>
       <div className="main">
         <LeftPanel />
-        <MainPanel key={topicId} title="主题详情">
+        <MainPanel title="主题详情">
           {topic && (
             <div className="">
               <div className="px-8 py-8 bg-white border-b border-border">
