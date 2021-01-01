@@ -104,12 +104,15 @@ const TopicPage: React.FC<PageProps> = ({ user, topicQuery }) => {
     },
   })
 
+  const title = `${topic.title} - HAKKA!`
+  const description = `登录 HAKKA! 以回复此主题`
   return (
     <AuthProvider value={user}>
       <Head>
-        <title>{}</title>
-        <meta property="og:description" content={`登录 HAKKA! 以回复此主题`} />
-        <meta name="description" content={`登录 HAKKA! 以回复此主题`} />
+        <title>{title}</title>
+        <meta property="og:title" content={title} />
+        <meta property="og:description" content={description} />
+        <meta name="description" content={description} />
         <meta name="twitter:card" content="summary" />
       </Head>
       <div className="main">
