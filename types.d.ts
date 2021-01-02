@@ -13,3 +13,5 @@ type TODO = any
 type $TsFixMe = any
 
 type Awaited<T> = T extends PromiseLike<infer U> ? Awaited<U> : T
+
+type ArrayElement<ArrayType extends readonly unknown[]> = ArrayType[number]

@@ -1583,12 +1583,20 @@
   dependencies:
     "@types/node" "*"
 
-"@urql/core@^1.16.0":
+"@urql/core@>=1.16.1", "@urql/core@^1.16.0":
   version "1.16.1"
   resolved "https://registry.npmjs.org/@urql/core/-/core-1.16.1.tgz#a41487dd4436cbdc92fce714c6c1fc04315761d3"
   integrity sha512-lcEMCS/rB+ug7jKSRDVZIsqNhZxRooTNa1kHfvSjJT2k4SXDyPmjNSfXBUJF2pDJmvv9EIKl9Tk0AF1CvG3Q/g==
   dependencies:
     "@graphql-typed-document-node/core" "^3.1.0"
+    wonka "^4.0.14"
+
+"@urql/exchange-graphcache@^3.3.3":
+  version "3.3.3"
+  resolved "https://registry.yarnpkg.com/@urql/exchange-graphcache/-/exchange-graphcache-3.3.3.tgz#bfd94899f52c8046d1b2e52caf4a3ccee623bb87"
+  integrity sha512-xkKvSN18bLsl6ldf64A7r2ibdoUwBlNJxog3cCyffktAgG3E1yuKbKs/qZELPsIQIEFPvTpC/gqCpBbJ7+0YRA==
+  dependencies:
+    "@urql/core" ">=1.16.1"
     wonka "^4.0.14"
 
 "@webassemblyjs/ast@1.9.0":

@@ -3,10 +3,10 @@ import {
   Client,
   createClient,
   dedupExchange,
-  cacheExchange,
   fetchExchange,
   ssrExchange,
 } from 'urql'
+import { cacheExchange } from '@urql/exchange-graphcache'
 
 export const createUrqlClient = () => {
   const ssr = ssrExchange({
@@ -17,7 +17,7 @@ export const createUrqlClient = () => {
     fetchOptions: {
       credentials: 'include',
     },
-    exchanges: [dedupExchange, cacheExchange, ssr, fetchExchange],
+    exchanges: [dedupExchange, cacheExchange(), ssr, fetchExchange],
   })
 }
 

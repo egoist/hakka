@@ -1,6 +1,20 @@
 mutation createComment($topicId: Int!, $content: String!, $parentId: Int) {
   createComment(topicId: $topicId, content: $content, parentId: $parentId) {
     id
+    createdAt
     html
+    likesCount
+    isLiked
+    author {
+      username
+      avatar
+    }
+    parent {
+      id
+      author {
+        username
+      }
+      html
+    }
   }
 }

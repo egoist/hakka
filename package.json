@@ -28,6 +28,7 @@
     "@badrap/bar-of-progress": "^0.1.1",
     "@hapi/iron": "^6.0.0",
     "@headlessui/react": "^0.2.0",
+    "@urql/exchange-graphcache": "^3.3.3",
     "apollo-server-micro": "^2.19.1",
     "body-parser": "1.19.0",
     "bull": "^3.20.0",
