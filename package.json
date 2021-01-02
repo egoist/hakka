@@ -12,7 +12,8 @@
     "build:server": "rm -rf server-dist && ttsc -p server",
     "g:gql": "graphql-codegen --config graphql-codegen.yml",
     "migrate:save": "typeorm migration:generate -n",
-    "migrate:deploy": "typeorm migration:run"
+    "migrate:deploy": "typeorm migration:run",
+    "migrate:check": "typeorm schema:log"
   },
   "husky": {
     "hooks": {
