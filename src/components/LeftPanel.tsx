@@ -236,12 +236,15 @@ export const LeftPanel = () => {
                     )}
                   >
                     <div>
-                      <h2 className="text-lg leading-snug">{topic.title}</h2>
-                      <div>
+                      <h2 className="text-lg leading-snug">
+                        <Link href={`/t/${topic.id}`}>
+                          <a>{topic.title}</a>
+                        </Link>
+                      </h2>
+                      <div className="text-xs flex items-center">
                         <Link href={`/go/${topic.node.slug}`}>
                           <a
                             className={clsx(
-                              `text-xs`,
                               !isActive && `text-gray-400`,
                               isActive && `text-white`,
                             )}
@@ -249,6 +252,38 @@ export const LeftPanel = () => {
                             #{topic.node.name}
                           </a>
                         </Link>
+                        {topic.url && topic.domain && (
+                          <a
+                            href={topic.url}
+                            onClick={(e) => {
+                              e.stopPropagation()
+                            }}
+                            target="_blank"
+                            rel="nofollow noopenner"
+                            className={clsx(
+                              `ml-3 inline-flex items-center`,
+                              !isActive && `text-blue-500 hover:text-blue-700`,
+                              isActive && `text-white`,
+                            )}
+                          >
+                            <svg
+                              focusable="false"
+                              width="1em"
+                              height="1em"
+                              viewBox="0 0 24 24"
+                            >
+                              <g fill="none">
+                                <path
+                                  d="M14 5a1 1 0 1 1 0-2h6a1 1 0 0 1 1 1v6a1 1 0 1 1-2 0V6.414l-9.293 9.293a1 1 0 0 1-1.414-1.414L17.586 5H14zM3 7a2 2 0 0 1 2-2h5a1 1 0 1 1 0 2H5v12h12v-5a1 1 0 1 1 2 0v5a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7z"
+                                  fill="currentColor"
+                                ></path>
+                              </g>
+                            </svg>
+                            <span style={{ marginLeft: '1px' }}>
+                              {topic.domain}
+                            </span>
+                          </a>
+                        )}
                       </div>
                       <div
                         className={clsx(
