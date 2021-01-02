@@ -2,6 +2,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  Index,
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm'
@@ -17,12 +18,14 @@ export class UserCommentLike {
   createdAt: Date
 
   @Column()
+  @Index()
   userId: number
 
   @ManyToOne((type) => User, (user) => user.userCommentLikes)
   user: User
 
   @Column()
+  @Index()
   commentId: number
 
   @ManyToOne((type) => Comment, (comment) => comment.userCommentLikes)

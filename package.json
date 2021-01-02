@@ -9,7 +9,7 @@
     "dev": "next",
     "build": "npm run build:server && next build",
     "dev:server": "ttsc -p server --watch",
-    "build:server": "ttsc -p server",
+    "build:server": "rm -rf server-dist && ttsc -p server",
     "g:gql": "graphql-codegen --config graphql-codegen.yml",
     "migrate:save": "typeorm migration:generate -n",
     "migrate:deploy": "typeorm migration:run"
