@@ -116,6 +116,7 @@ const TopicPage: React.FC<PageProps> = ({ user, topicQuery }) => {
       <div className="main">
         <LeftPanel />
         <MainPanel
+          key={`topic-${topicId}`}
           title="主题详情"
           headerRight={
             <>
