@@ -1,5 +1,5 @@
 import { Context, GqlContext } from '@server/decorators/gql-context'
-import { requireAuth } from '@server/guards/require-auth'
+import { isAdmin, requireAuth } from '@server/guards/require-auth'
 import { renderMarkdown } from '@server/lib/markdown'
 import { getRepos } from '@server/orm'
 import { ApolloError } from 'apollo-server-micro'
@@ -266,7 +266,9 @@ export class TopicResolver {
     if (!topic) {
       throw new ApolloError(`主题不存在`)
     }
-    if (topic.authorId !== user.id) {
+
+    // Allow the author and admins to update the topic
+    if (topic.authorId !== user.id && !isAdmin(user)) {
       throw new ApolloError(`没有访问权限`)
     }
 
