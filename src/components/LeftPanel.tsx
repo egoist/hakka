@@ -224,13 +224,26 @@ export const LeftPanel = () => {
                 <Link key={topic.id} href={`/t/${topic.id}`}>
                   <span
                     className={clsx(
-                      `p-3 flex justify-between border-b border-border`,
+                      `p-3 flex justify-between border-b border-border cursor-pointer`,
                       !isActive && `hover:bg-gray-50`,
                       isActive && `bg-blue-600 text-white`,
                     )}
                   >
                     <div>
-                      <h2 className="text-lg">{topic.title}</h2>
+                      <h2 className="text-lg leading-snug">{topic.title}</h2>
+                      <div>
+                        <Link href={`/go/${topic.node.slug}`}>
+                          <a
+                            className={clsx(
+                              `text-xs`,
+                              !isActive && `text-gray-400`,
+                              isActive && `text-white`,
+                            )}
+                          >
+                            #{topic.node.name}
+                          </a>
+                        </Link>
+                      </div>
                       <div
                         className={clsx(
                           `text-sm mt-1`,

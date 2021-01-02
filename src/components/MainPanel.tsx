@@ -2,10 +2,10 @@ import { useStore } from '@src/lib/store'
 import { useRouter } from 'next/router'
 import React from 'react'
 
-export const MainPanel: React.FC<{ title?: string }> = ({
-  children,
-  title,
-}) => {
+export const MainPanel: React.FC<{
+  title?: string
+  headerRight?: React.ReactElement
+}> = ({ children, title, headerRight }) => {
   const router = useRouter()
   const handleClickBackButton = () => {
     // Back home if browsing on mobile devices
@@ -49,6 +49,7 @@ export const MainPanel: React.FC<{ title?: string }> = ({
           </button>
           {title && <span className="ml-2">{title}</span>}
         </div>
+        {headerRight && <div className="pr-3">{headerRight}</div>}
       </header>
 
       <div className="panel-content">{children}</div>

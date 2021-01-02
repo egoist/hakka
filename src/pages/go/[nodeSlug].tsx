@@ -24,10 +24,12 @@ export const getServerSideProps: GetServerSideProps<PageProps> = async (
 const NodePage: React.FC<PageProps> = ({ user }) => {
   return (
     <AuthProvider value={user}>
-      <LeftPanel />
-      <MainPanel title="节点详情">
-        <div className="p-8">此页面还在开发中..</div>
-      </MainPanel>
+      <div className="main">
+        <LeftPanel />
+        <MainPanel title="节点详情">
+          <div className="p-8">此页面还在开发中..</div>
+        </MainPanel>
+      </div>
     </AuthProvider>
   )
 }

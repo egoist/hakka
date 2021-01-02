@@ -115,33 +115,50 @@ const TopicPage: React.FC<PageProps> = ({ user, topicQuery }) => {
       </Head>
       <div className="main">
         <LeftPanel />
-        <MainPanel title="主题详情">
+        <MainPanel
+          title="主题详情"
+          headerRight={
+            <>
+              {canEdit && (
+                <span className="ml-3">
+                  <Link href={`/edit-topic/${topic.id}`}>
+                    <a className="text-blue-300 hover:text-blue-500">编辑</a>
+                  </Link>
+                </span>
+              )}
+            </>
+          }
+        >
           {topic && (
             <div className="">
-              <div className="px-8 py-8 bg-white border-b border-border">
-                <div className="items-center flex mb-3 text-gray-500 text-sm">
-                  <div className="flex items-center space-x-3">
+              <div className="px-8 py-8 bg-white">
+                <div className="flex mb-3 text-gray-500 text-sm">
+                  <div className="flex space-x-3">
                     <Avatar
                       size="w-10 h-10"
                       username={topic.author.username}
                       avatar={topic.author.avatar}
                     />
-                    <Link href={`/u/${topic.author.username}`}>
-                      <a className="font-medium text-gray-900">
-                        {topic.author.username}
-                      </a>
-                    </Link>
+                    <div>
+                      <div>
+                        <Link href={`/u/${topic.author.username}`}>
+                          <a className="font-medium text-gray-900">
+                            {topic.author.username}
+                          </a>
+                        </Link>
+                        <span className="ml-2 text-xs text-gray-400">
+                          {timeago(topic.createdAt)}
+                        </span>
+                      </div>
+                      <div className="text-xs" style={{ marginTop: '1px' }}>
+                        <Link href={`/go/${topic.node.slug}`}>
+                          <a className="text-gray-400 hover:text-gray-700">
+                            #{topic.node.name}
+                          </a>
+                        </Link>
+                      </div>
+                    </div>
                   </div>
-                  <span className="ml-3 text-xs text-gray-400">
-                    {timeago(topic.createdAt)}
-                  </span>
-                  {canEdit && (
-                    <span className="ml-3 text-xs">
-                      <Link href={`/edit-topic/${topic.id}`}>
-                        <a className="text-blue-300">编辑</a>
-                      </Link>
-                    </span>
-                  )}
                 </div>
                 <h1 className="text-xl font-medium">{topic.title}</h1>
                 <div className="mt-3">
@@ -170,16 +187,16 @@ const TopicPage: React.FC<PageProps> = ({ user, topicQuery }) => {
           )}
 
           {!comments && (
-            <div className="flex justify-center items-center p-8">
+            <div className="flex justify-center items-center p-8 border-t border-border">
               <Spinner />
             </div>
           )}
 
           {comments && comments.items.length > 0 && (
-            <div className="divide-y divide-border">
+            <div className="divide-y divide-border border-t border-border">
               {comments.items.map((comment) => {
                 return (
-                  <div key={comment.id} className="flex space-x-5 bg-white p-8">
+                  <div key={comment.id} className="flex space-x-3 bg-white p-8">
                     <div className="flex-shrink-0">
                       <Avatar
                         username={comment.author.username}
@@ -247,7 +264,7 @@ const TopicPage: React.FC<PageProps> = ({ user, topicQuery }) => {
           )}
 
           {user && (
-            <div className="p-8 flex space-x-5 border-t border-border">
+            <div className="p-8 flex space-x-3 border-t border-border">
               <div className="flex-shrink-0">
                 <Avatar
                   size="w-10 h-10"
