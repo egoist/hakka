@@ -6,7 +6,6 @@ import {
   UpdateDateColumn,
   ManyToOne,
   OneToMany,
-  AfterLoad,
   OneToOne,
   JoinColumn,
 } from 'typeorm'
@@ -14,7 +13,6 @@ import { User } from './user.entity'
 import { Comment } from './comment.entity'
 import { Node } from './node.entity'
 import { UserTopicLike } from './user-topic-like.entity'
-import { parseURL } from '@server/lib/utils'
 
 @Entity()
 export class Topic {
@@ -57,16 +55,4 @@ export class Topic {
   @OneToOne((type) => Comment, { nullable: true, onDelete: 'SET NULL' })
   @JoinColumn()
   lastComment?: Comment
-
-  url?: string
-  domain?: string
-
-  @AfterLoad()
-  afterLoad() {
-    const url = parseURL(this.content.trim().split(/[\s\n]/)[0])
-    if (url) {
-      this.url = url.href
-      this.domain = url.hostname.replace(/^www\./, '')
-    }
-  }
 }

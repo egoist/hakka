@@ -18,6 +18,7 @@ import {
 import { Node } from './node.resolver'
 import { Comment } from './comment.resolver'
 import { getConnection } from '@server/orm'
+import { parseURL } from '@server/lib/utils'
 
 @ArgsType()
 class TopicsArgs {
@@ -134,6 +135,15 @@ class LikeTopicArgs {
   topicId: number
 }
 
+@ObjectType()
+class TopicExternalLink {
+  @Field()
+  url: string
+
+  @Field()
+  domain: string
+}
+
 @Resolver((of) => Topic)
 export class TopicResolver {
   @Query((returns) => TopicsConnection)
@@ -241,6 +251,17 @@ export class TopicResolver {
   async lastComment(@Root() topic: Topic) {
     const repos = await getRepos()
     return repos.comment.findOne({ id: topic.lastCommentId })
+  }
+
+  @FieldResolver((returns) => TopicExternalLink, { nullable: true })
+  externalLink(@Root() topic: Topic) {
+    const url = parseURL(topic.content.trim().split(/[\s\n]/)[0])
+    if (url) {
+      return {
+        url: url.href,
+        domain: url.hostname.replace(/^www\./, ''),
+      }
+    }
   }
 
   @Mutation((returns) => Topic)

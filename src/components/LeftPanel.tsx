@@ -252,9 +252,9 @@ export const LeftPanel = () => {
                             #{topic.node.name}
                           </a>
                         </Link>
-                        {topic.url && topic.domain && (
+                        {topic.externalLink && (
                           <a
-                            href={topic.url}
+                            href={topic.externalLink.url}
                             onClick={(e) => {
                               e.stopPropagation()
                             }}
@@ -280,7 +280,7 @@ export const LeftPanel = () => {
                               </g>
                             </svg>
                             <span style={{ marginLeft: '1px' }}>
-                              {topic.domain}
+                              {topic.externalLink.domain}
                             </span>
                           </a>
                         )}
