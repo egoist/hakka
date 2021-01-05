@@ -287,23 +287,38 @@ export const LeftPanel = () => {
                       </div>
                       <div
                         className={clsx(
-                          `text-sm mt-1`,
+                          `flex items-center text-xs mt-1`,
                           !isActive && `text-gray-400`,
                           isActive && `text-white`,
                         )}
                       >
-                        <span className="space-x-2">
+                        <span className="flex items-center space-x-2">
                           <Avatar
                             size="w-5 h-5"
                             username={topic.author.username}
                             avatar={topic.author.avatar}
                           />
                           <Link href={`/u/${topic.author.username}`}>
-                            <a>{topic.author.username}</a>
+                            <a className="hover:text-blue-500">
+                              {topic.author.username}
+                            </a>
                           </Link>
                         </span>
                         <span className="mx-2">•</span>
                         <span>{timeago(topic.createdAt)}</span>
+                        {topic.lastComment && <span className="mx-2">•</span>}
+                        {topic.lastComment && (
+                          <span>
+                            最新回复来自{' '}
+                            <Link
+                              href={`/u/${topic.lastComment.author.username}`}
+                            >
+                              <a className="hover:text-blue-500">
+                                {topic.lastComment.author.username}
+                              </a>
+                            </Link>
+                          </span>
+                        )}
                       </div>
                     </div>
                     <div className="w-12 flex-shrink-0 flex justify-end items-center">

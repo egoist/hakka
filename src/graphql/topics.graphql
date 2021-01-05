@@ -9,6 +9,11 @@ query topics($page: Int!) {
       likesCount
       url
       domain
+      lastComment {
+        author {
+          username
+        }
+      }
       node {
         id
         slug

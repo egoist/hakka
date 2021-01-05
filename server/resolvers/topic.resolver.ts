@@ -14,14 +14,15 @@ import {
   Mutation,
   FieldResolver,
   Root,
-  registerEnumType,
 } from 'type-graphql'
 import { Node } from './node.resolver'
+import { Comment } from './comment.resolver'
+import { getConnection } from '@server/orm'
 
 @ArgsType()
 class TopicsArgs {
   @Field((type) => Int, {
-    defaultValue: 30,
+    defaultValue: 100,
   })
   take: number
 
@@ -65,6 +66,9 @@ export class Topic {
 
   @Field((type) => Int)
   nodeId: number
+
+  @Field((type) => Int, { nullable: true })
+  lastCommentId?: number
 
   @Field({
     nullable: true,
@@ -135,14 +139,19 @@ export class TopicResolver {
   @Query((returns) => TopicsConnection)
   async topics(@GqlContext() ctx: Context, @Args() args: TopicsArgs) {
     const skip = (args.page - 1) * args.take
-    const repos = await getRepos()
-    const topics = await repos.topic.find({
-      order: {
-        createdAt: 'DESC',
-      },
-      take: args.take + 1,
-      skip,
-    })
+    const connection = await getConnection()
+    const topics = await connection.query(
+      `
+    select "topic".* from "topic" "topic"
+    left join "comment" "lastComment"
+      on "lastComment"."id" = "topic"."lastCommentId"
+    order by
+      case when "lastComment" is null then "topic"."createdAt" else "lastComment"."createdAt" end DESC
+    limit $1
+    offset $2
+    `,
+      [args.take + 1, skip],
+    )
     return {
       items: topics.slice(0, args.take),
       hasNext: topics.length > args.take,
@@ -226,6 +235,12 @@ export class TopicResolver {
       select: ['id'],
     })
     return Boolean(record)
+  }
+
+  @FieldResolver((returns) => Comment, { nullable: true })
+  async lastComment(@Root() topic: Topic) {
+    const repos = await getRepos()
+    return repos.comment.findOne({ id: topic.lastCommentId })
   }
 
   @Mutation((returns) => Topic)

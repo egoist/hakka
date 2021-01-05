@@ -83,6 +83,7 @@ export type Topic = {
   updatedAt: Scalars['DateTime'];
   authorId: Scalars['Int'];
   nodeId: Scalars['Int'];
+  lastCommentId?: Maybe<Scalars['Int']>;
   /** A url string if the content is a valid URL */
   url?: Maybe<Scalars['String']>;
   /** If this topic content is a url, this field will be filled with the domain name */
@@ -93,6 +94,7 @@ export type Topic = {
   node: Node;
   likesCount: Scalars['Int'];
   isLiked: Scalars['Boolean'];
+  lastComment?: Maybe<Comment>;
 };
 
 export type TopicAuthor = {
@@ -100,14 +102,6 @@ export type TopicAuthor = {
   id: Scalars['Int'];
   username: Scalars['String'];
   avatar?: Maybe<Scalars['String']>;
-};
-
-export type CommentsConnection = {
-  __typename?: 'CommentsConnection';
-  items: Array<Comment>;
-  hasNext: Scalars['Boolean'];
-  hasPrev: Scalars['Boolean'];
-  total: Scalars['Int'];
 };
 
 export type Comment = {
@@ -132,6 +126,14 @@ export type UserPublicInfo = {
   id: Scalars['Int'];
   username: Scalars['String'];
   avatar?: Maybe<Scalars['String']>;
+};
+
+export type CommentsConnection = {
+  __typename?: 'CommentsConnection';
+  items: Array<Comment>;
+  hasNext: Scalars['Boolean'];
+  hasPrev: Scalars['Boolean'];
+  total: Scalars['Int'];
 };
 
 export enum Sort_Order {
@@ -447,7 +449,13 @@ export type TopicsQuery = (
     & { items: Array<(
       { __typename?: 'Topic' }
       & Pick<Topic, 'id' | 'createdAt' | 'title' | 'commentsCount' | 'likesCount' | 'url' | 'domain'>
-      & { node: (
+      & { lastComment?: Maybe<(
+        { __typename?: 'Comment' }
+        & { author: (
+          { __typename?: 'UserPublicInfo' }
+          & Pick<UserPublicInfo, 'username'>
+        ) }
+      )>, node: (
         { __typename?: 'Node' }
         & Pick<Node, 'id' | 'slug' | 'name'>
       ), author: (
@@ -535,7 +543,7 @@ export const TopicForEditDocument: DocumentNode = {"kind":"Document","definition
 export function useTopicForEditQuery(options: Omit<Urql.UseQueryArgs<TopicForEditQueryVariables>, 'query'> = {}) {
   return Urql.useQuery<TopicForEditQuery>({ query: TopicForEditDocument, ...options });
 };
-export const TopicsDocument: DocumentNode = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"topics"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"page"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"topics"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"page"},"value":{"kind":"Variable","name":{"kind":"Name","value":"page"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"hasNext"}},{"kind":"Field","name":{"kind":"Name","value":"items"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"commentsCount"}},{"kind":"Field","name":{"kind":"Name","value":"likesCount"}},{"kind":"Field","name":{"kind":"Name","value":"url"}},{"kind":"Field","name":{"kind":"Name","value":"domain"}},{"kind":"Field","name":{"kind":"Name","value":"node"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"slug"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"Field","name":{"kind":"Name","value":"author"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"username"}},{"kind":"Field","name":{"kind":"Name","value":"avatar"}}]}}]}}]}}]}}]};
+export const TopicsDocument: DocumentNode = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"topics"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"page"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"topics"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"page"},"value":{"kind":"Variable","name":{"kind":"Name","value":"page"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"hasNext"}},{"kind":"Field","name":{"kind":"Name","value":"items"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"commentsCount"}},{"kind":"Field","name":{"kind":"Name","value":"likesCount"}},{"kind":"Field","name":{"kind":"Name","value":"url"}},{"kind":"Field","name":{"kind":"Name","value":"domain"}},{"kind":"Field","name":{"kind":"Name","value":"lastComment"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"author"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"username"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"node"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"slug"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"Field","name":{"kind":"Name","value":"author"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"username"}},{"kind":"Field","name":{"kind":"Name","value":"avatar"}}]}}]}}]}}]}}]};
 
 export function useTopicsQuery(options: Omit<Urql.UseQueryArgs<TopicsQueryVariables>, 'query'> = {}) {
   return Urql.useQuery<TopicsQuery>({ query: TopicsDocument, ...options });
