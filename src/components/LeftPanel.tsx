@@ -287,7 +287,7 @@ export const LeftPanel = () => {
                       </div>
                       <div
                         className={clsx(
-                          `flex items-center text-xs mt-1`,
+                          `flex items-center flex-wrap text-xs mt-1`,
                           !isActive && `text-gray-400`,
                           isActive && `text-white`,
                         )}
