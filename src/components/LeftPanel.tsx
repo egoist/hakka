@@ -299,7 +299,11 @@ export const LeftPanel = () => {
                             avatar={topic.author.avatar}
                           />
                           <Link href={`/u/${topic.author.username}`}>
-                            <a className="hover:text-blue-500">
+                            <a
+                              className={clsx(
+                                !isActive && `hover:text-blue-500`,
+                              )}
+                            >
                               {topic.author.username}
                             </a>
                           </Link>
@@ -313,7 +317,11 @@ export const LeftPanel = () => {
                             <Link
                               href={`/u/${topic.lastComment.author.username}`}
                             >
-                              <a className="hover:text-blue-500">
+                              <a
+                                className={clsx(
+                                  !isActive && `hover:text-blue-500`,
+                                )}
+                              >
                                 {topic.lastComment.author.username}
                               </a>
                             </Link>
