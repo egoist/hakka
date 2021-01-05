@@ -63,7 +63,7 @@ export class Topic {
 
   @AfterLoad()
   afterLoad() {
-    const url = parseURL(this.content)
+    const url = parseURL(this.content.trim().split(/[\s\n]/)[0])
     if (url) {
       this.url = url.href
       this.domain = url.hostname.replace(/^www\./, '')
