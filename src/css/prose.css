@@ -6,6 +6,10 @@
   @apply mb-0;
 }
 
+.prose {
+  @apply break-words;
+}
+
 .prose p {
   @apply my-3;
 }
