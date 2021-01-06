@@ -7,7 +7,7 @@
 }
 
 .prose {
-  @apply break-words;
+  @apply break-all;
 }
 
 .prose p {
