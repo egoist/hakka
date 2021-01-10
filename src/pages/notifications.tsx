@@ -10,6 +10,7 @@ import { AuthProvider } from '@src/hooks/useAuth'
 import Head from 'next/head'
 import { Main } from '@src/components/Main'
 import { Spinner } from '@src/components/Spinner'
+import { timeago } from '@src/lib/date'
 
 type PageProps = {
   user: AuthUser | null
@@ -84,6 +85,7 @@ const NotificationsPage: React.FC<PageProps> = ({ user }) => {
                               {topicComment.author.username}
                             </a>
                           </Link>{' '}
+                          {timeago(item.createdAt)}
                           回复了主题 "{topicComment.topic.title}"
                         </div>
                         <div
@@ -111,7 +113,8 @@ const NotificationsPage: React.FC<PageProps> = ({ user }) => {
                               {commentReply.author.username}
                             </a>
                           </Link>{' '}
-                          在 "{commentReply.topic.title}" 回复了你:
+                          {timeago(item.createdAt)}在 "
+                          {commentReply.topic.title}" 回复了你:
                         </div>
                         <div
                           className="prose bg-gray-100 rounded-md p-3 mt-3"
