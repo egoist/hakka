@@ -5,7 +5,8 @@ import { Header } from './Header'
 export const Main: React.FC<{
   render: () => React.ReactElement
   refreshButtonCallback?: () => void
-}> = ({ render, refreshButtonCallback }) => {
+  isRefreshing?: boolean
+}> = ({ render, refreshButtonCallback, isRefreshing }) => {
   const hideLeftPanel = useStore((state) => state.hideLeftPanel)
 
   return (
@@ -15,7 +16,10 @@ export const Main: React.FC<{
         hideLeftPanel && 'is-hidden',
       )}
     >
-      <Header refreshButtonCallback={refreshButtonCallback} />
+      <Header
+        refreshButtonCallback={refreshButtonCallback}
+        isRefreshing={isRefreshing}
+      />
       {render()}
     </div>
   )

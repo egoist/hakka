@@ -1,12 +1,14 @@
 import { useNotificationsCountQuery } from '@src/generated/graphql'
 import { useAuth } from '@src/hooks/useAuth'
+import clsx from 'clsx'
 import Link from 'next/link'
 import React from 'react'
 import { DropdownMenu } from './DropdownMenu'
 
-export const Header: React.FC<{ refreshButtonCallback?: () => void }> = ({
-  refreshButtonCallback,
-}) => {
+export const Header: React.FC<{
+  refreshButtonCallback?: () => void
+  isRefreshing?: boolean
+}> = ({ refreshButtonCallback, isRefreshing }) => {
   const { user } = useAuth()
   const [showDropdown, setShowDropdown] = React.useState(false)
 
@@ -68,7 +70,7 @@ export const Header: React.FC<{ refreshButtonCallback?: () => void }> = ({
               className="h-full inline-flex justify-center items-center hover:text-theme focus:outline-none"
             >
               <svg
-                className="w-5 h-5"
+                className={clsx(`w-5 h-5`, isRefreshing && `animate-spin`)}
                 fill="currentColor"
                 viewBox="0 0 20 20"
                 xmlns="http://www.w3.org/2000/svg"

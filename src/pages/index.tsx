@@ -43,6 +43,7 @@ const HomePage: React.FC<PageProps> = ({ user }) => {
       </Head>
       <Main
         refreshButtonCallback={refetchTopicsQuery}
+        isRefreshing={topicsQuery.stale}
         render={() => (
           <div className="panel-content">
             {!topics && (
