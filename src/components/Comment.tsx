@@ -1,8 +1,9 @@
 import { CommentsQuery } from '@src/generated/graphql'
 import { timeago } from '@src/lib/date'
+import clsx from 'clsx'
 import Link from 'next/link'
+import { useRouter } from 'next/router'
 import React from 'react'
-import { Avatar } from './Avatar'
 import { CommentLikeButton } from './CommentLikeButton'
 import { TopicReplyButton } from './TopicReplyButton'
 
@@ -10,8 +11,26 @@ export const Comment: React.FC<{
   comment: ArrayElement<CommentsQuery['comments']['items']>
   handleClickReplyButton: (commentId: number) => void
 }> = ({ comment, handleClickReplyButton }) => {
+  const [isActive, setIsActive] = React.useState(false)
+  const el = React.useRef<HTMLDivElement>(null)
+
+  if (process.browser) {
+    React.useEffect(() => {
+      if (location.hash === `#comment-${comment.id}`) {
+        setIsActive(true)
+        el.current?.scrollIntoView()
+      } else {
+        setIsActive(false)
+      }
+    }, [location.hash])
+  }
+
   return (
-    <div className="flex space-x-3 bg-white p-6">
+    <div
+      ref={el}
+      className={clsx(`flex space-x-3 p-6`, isActive && `bg-yellow-50`)}
+      id={`comment-${comment.id}`}
+    >
       <div className="w-full">
         <div className="mb-1 text-gray-400 text-sm">
           <Link href={`/u/${comment.author.username}`}>

@@ -92,6 +92,7 @@ const TopicPage: React.FC<PageProps> = ({ user, topicQuery }) => {
         parentId: parentCommentId,
       })
       if (data) {
+        router.push(`/t/${topic.id}#comment-${data.createComment.id}`)
         setParentCommentId(null)
         refetchCommentsQuery({
           requestPolicy: 'cache-and-network',
