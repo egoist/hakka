@@ -121,25 +121,31 @@ const TopicPage: React.FC<PageProps> = ({ user, topicQuery }) => {
               <div className="">
                 <div className="p-6 bg-white">
                   <div className="flex mb-3 text-gray-500 text-sm">
-                    <div className="flex">
+                    <div className=" w-full">
                       <div>
-                        <div>
-                          <Link href={`/u/${topic.author.username}`}>
-                            <a className="font-medium text-gray-900">
-                              {topic.author.username}
-                            </a>
+                        <Link href={`/u/${topic.author.username}`}>
+                          <a className="font-medium text-gray-900">
+                            {topic.author.username}
+                          </a>
+                        </Link>
+                        <span className="ml-2 text-xs text-gray-400">
+                          {timeago(topic.createdAt)}
+                        </span>
+                      </div>
+                      <div
+                        className="w-full text-xs flex items-center justify-between"
+                        style={{ marginTop: '1px' }}
+                      >
+                        <Link href={`/go/${topic.node.slug}`}>
+                          <a className="text-gray-400 hover:text-gray-700">
+                            #{topic.node.name}
+                          </a>
+                        </Link>
+                        {canEdit && (
+                          <Link href={`/edit-topic/${topic.id}`}>
+                            <a className="text-blue-400">编辑</a>
                           </Link>
-                          <span className="ml-2 text-xs text-gray-400">
-                            {timeago(topic.createdAt)}
-                          </span>
-                        </div>
-                        <div className="text-xs" style={{ marginTop: '1px' }}>
-                          <Link href={`/go/${topic.node.slug}`}>
-                            <a className="text-gray-400 hover:text-gray-700">
-                              #{topic.node.name}
-                            </a>
-                          </Link>
-                        </div>
+                        )}
                       </div>
                     </div>
                   </div>
