@@ -1,6 +1,5 @@
 import { AuthUser, getServerSession } from '@server/lib/auth'
-import { LeftPanel } from '@src/components/LeftPanel'
-import { MainPanel } from '@src/components/MainPanel'
+import { Main } from '@src/components/Main'
 import { AuthProvider } from '@src/hooks/useAuth'
 import { GetServerSideProps } from 'next'
 import React from 'react'
@@ -24,12 +23,7 @@ export const getServerSideProps: GetServerSideProps<PageProps> = async (
 const UserPage: React.FC<PageProps> = ({ user }) => {
   return (
     <AuthProvider value={user}>
-      <div className="main">
-        <LeftPanel />
-        <MainPanel title="用户详情">
-          <div className="p-8">此页面暂时不可用</div>
-        </MainPanel>
-      </div>
+      <Main render={() => <div className="p-8">此页面暂时不可用</div>} />
     </AuthProvider>
   )
 }

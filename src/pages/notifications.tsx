@@ -8,8 +8,8 @@ import { AuthUser, getServerSession } from '@server/lib/auth'
 import { GetServerSideProps } from 'next'
 import { AuthProvider } from '@src/hooks/useAuth'
 import Head from 'next/head'
-import { LeftPanel } from '@src/components/LeftPanel'
-import { MainPanel } from '@src/components/MainPanel'
+import { Main } from '@src/components/Main'
+import { Spinner } from '@src/components/Spinner'
 
 type PageProps = {
   user: AuthUser | null
@@ -55,10 +55,14 @@ const NotificationsPage: React.FC<PageProps> = ({ user }) => {
       <Head>
         <title>消息 - HAKKA!</title>
       </Head>
-      <div className="main">
-        <LeftPanel />
-        <MainPanel title="消息">
+      <Main
+        render={() => (
           <div className="divide-y">
+            {notificationsQuery.fetching && (
+              <div className="p-5 flex justify-center">
+                <Spinner />
+              </div>
+            )}
             {items && items.length === 0 && (
               <div className="text-center p-5">没有新消息</div>
             )}
@@ -130,8 +134,8 @@ const NotificationsPage: React.FC<PageProps> = ({ user }) => {
                 )
               })}
           </div>
-        </MainPanel>
-      </div>
+        )}
+      />
     </AuthProvider>
   )
 }

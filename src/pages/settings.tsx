@@ -1,6 +1,5 @@
 import { AuthUser, getServerSession } from '@server/lib/auth'
-import { LeftPanel } from '@src/components/LeftPanel'
-import { MainPanel } from '@src/components/MainPanel'
+import { Main } from '@src/components/Main'
 import { AuthProvider } from '@src/hooks/useAuth'
 import { GetServerSideProps } from 'next'
 import Head from 'next/head'
@@ -37,10 +36,7 @@ const SettingsPage: React.FC<PageProps> = ({ user }) => {
       <Head>
         <title>设置 - HAKKA!</title>
       </Head>
-      <LeftPanel />
-      <MainPanel title="设置">
-        <div className="p-8">暂时不能更改个人资料</div>
-      </MainPanel>
+      <Main render={() => <div className="p-6">暂时不能更改个人资料</div>} />
     </AuthProvider>
   )
 }

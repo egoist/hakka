@@ -13,8 +13,7 @@ import { GetServerSideProps } from 'next'
 import { AuthUser, getServerSession } from '@server/lib/auth'
 import { AuthProvider } from '@src/hooks/useAuth'
 import Head from 'next/head'
-import { LeftPanel } from '@src/components/LeftPanel'
-import { MainPanel } from '@src/components/MainPanel'
+import { Main } from '@src/components/Main'
 
 type PageProps = {
   user: AuthUser | null
@@ -109,10 +108,9 @@ const NewTopicPage: React.FC<PageProps> = ({ user }) => {
       <Head>
         <title>{title}</title>
       </Head>
-      <div className="main">
-        <LeftPanel />
-        <MainPanel title={title}>
-          <div className="p-8">
+      <Main
+        render={() => (
+          <div className="p-6">
             <form className="" onSubmit={form.handleSubmit}>
               <div className=" mb-4">
                 <Select
@@ -166,8 +164,8 @@ const NewTopicPage: React.FC<PageProps> = ({ user }) => {
               </div>
             </form>
           </div>
-        </MainPanel>
-      </div>
+        )}
+      />
     </AuthProvider>
   )
 }

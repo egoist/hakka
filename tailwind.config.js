@@ -7,6 +7,7 @@ module.exports = {
         'body-bg': 'var(--body-bg)',
         'main-bg': 'var(--main-bg)',
         border: 'var(--border-color)',
+        theme: `var(--theme-color)`,
       },
     },
   },

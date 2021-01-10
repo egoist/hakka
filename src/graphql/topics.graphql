@@ -12,7 +12,9 @@ query topics($page: Int!) {
         domain
       }
       lastComment {
+        id
         author {
+          id
           username
         }
       }

@@ -11,14 +11,7 @@ export const Comment: React.FC<{
   handleClickReplyButton: (commentId: number) => void
 }> = ({ comment, handleClickReplyButton }) => {
   return (
-    <div className="flex space-x-3 bg-white p-8">
-      <div className="flex-shrink-0">
-        <Avatar
-          username={comment.author.username}
-          avatar={comment.author.avatar}
-          size="w-10 h-10"
-        />
-      </div>
+    <div className="flex space-x-3 bg-white p-6">
       <div className="w-full">
         <div className="mb-1 text-gray-400 text-sm">
           <Link href={`/u/${comment.author.username}`}>

@@ -3,8 +3,7 @@ import { AuthUser, getServerSession } from '@server/lib/auth'
 import { GetServerSideProps } from 'next'
 import { AuthProvider } from '@src/hooks/useAuth'
 import Head from 'next/head'
-import { LeftPanel } from '@src/components/LeftPanel'
-import { MainPanel } from '@src/components/MainPanel'
+import { Main } from '@src/components/Main'
 
 type PageProps = {
   user: AuthUser | null
@@ -37,9 +36,8 @@ const LoginPage: React.FC<PageProps> = ({ user }) => {
       <Head>
         <title>登录 - HAKKA!</title>
       </Head>
-      <div className="main">
-        <LeftPanel />
-        <MainPanel title="登录">
+      <Main
+        render={() => (
           <div className="text-center p-8">
             <h2 className="text-xl font-medium">欢迎回来</h2>
             <div className="p-5 bg-white rounded-md">
@@ -60,8 +58,8 @@ const LoginPage: React.FC<PageProps> = ({ user }) => {
               </a>
             </div>
           </div>
-        </MainPanel>
-      </div>
+        )}
+      />
     </AuthProvider>
   )
 }

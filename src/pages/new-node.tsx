@@ -7,8 +7,7 @@ import { AuthUser, getServerSession } from '@server/lib/auth'
 import { GetServerSideProps } from 'next'
 import { AuthProvider } from '@src/hooks/useAuth'
 import Head from 'next/head'
-import { LeftPanel } from '@src/components/LeftPanel'
-import { MainPanel } from '@src/components/MainPanel'
+import { Main } from '@src/components/Main'
 
 type PageProps = {
   user: AuthUser | null
@@ -68,10 +67,9 @@ const NewNodePage: React.FC<PageProps> = ({ user }) => {
       <Head>
         <title>创建节点</title>
       </Head>
-      <div className="main">
-        <LeftPanel />
-        <MainPanel title="创建节点">
-          <div className="p-8">
+      <Main
+        render={() => (
+          <div className="p-6">
             <form onSubmit={form.handleSubmit}>
               <div>
                 <label
@@ -149,9 +147,9 @@ const NewNodePage: React.FC<PageProps> = ({ user }) => {
                 </Button>
               </div>
             </form>
-          </div>{' '}
-        </MainPanel>
-      </div>
+          </div>
+        )}
+      />
     </AuthProvider>
   )
 }

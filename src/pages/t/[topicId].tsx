@@ -8,7 +8,6 @@ import {
   useCreateCommentMutation,
 } from '@src/generated/graphql'
 import { timeago } from '@src/lib/date'
-import { Avatar } from '@src/components/Avatar'
 import { AuthProvider } from '@src/hooks/useAuth'
 import { TopicLikeButton } from '@src/components/TopicLikeButton'
 import { TopicReplyButton } from '@src/components/TopicReplyButton'
@@ -16,14 +15,13 @@ import { GetServerSideProps } from 'next'
 import { AuthUser, getServerSession } from '@server/lib/auth'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { LeftPanel } from '@src/components/LeftPanel'
-import { MainPanel } from '@src/components/MainPanel'
 import { useFormik } from 'formik'
 import { stripHTML } from '@src/lib/utils'
 import { Button } from '@src/components/Button'
 import { queryGraphql } from '@server/lib/graphql'
 import { Spinner } from '@src/components/Spinner'
 import { Comment } from '@src/components/Comment'
+import { Main } from '@src/components/Main'
 
 type PageProps = {
   user: AuthUser | null
@@ -116,157 +114,134 @@ const TopicPage: React.FC<PageProps> = ({ user, topicQuery }) => {
         <meta name="description" content={description} />
         <meta name="twitter:card" content="summary" />
       </Head>
-      <div className="main">
-        <LeftPanel />
-        <MainPanel
-          key={`topic-${topicId}`}
-          title="主题详情"
-          headerRight={
-            <>
-              {canEdit && (
-                <span className="ml-3">
-                  <Link href={`/edit-topic/${topic.id}`}>
-                    <a className="text-blue-300 hover:text-blue-500">编辑</a>
-                  </Link>
-                </span>
-              )}
-            </>
-          }
-        >
-          {topic && (
-            <div className="">
-              <div className="px-8 py-8 bg-white">
-                <div className="flex mb-3 text-gray-500 text-sm">
-                  <div className="flex space-x-3">
-                    <Avatar
-                      size="w-10 h-10"
-                      username={topic.author.username}
-                      avatar={topic.author.avatar}
-                    />
-                    <div>
+      <Main
+        render={() => (
+          <>
+            {topic && (
+              <div className="">
+                <div className="p-6 bg-white">
+                  <div className="flex mb-3 text-gray-500 text-sm">
+                    <div className="flex">
                       <div>
-                        <Link href={`/u/${topic.author.username}`}>
-                          <a className="font-medium text-gray-900">
-                            {topic.author.username}
-                          </a>
-                        </Link>
-                        <span className="ml-2 text-xs text-gray-400">
-                          {timeago(topic.createdAt)}
-                        </span>
-                      </div>
-                      <div className="text-xs" style={{ marginTop: '1px' }}>
-                        <Link href={`/go/${topic.node.slug}`}>
-                          <a className="text-gray-400 hover:text-gray-700">
-                            #{topic.node.name}
-                          </a>
-                        </Link>
+                        <div>
+                          <Link href={`/u/${topic.author.username}`}>
+                            <a className="font-medium text-gray-900">
+                              {topic.author.username}
+                            </a>
+                          </Link>
+                          <span className="ml-2 text-xs text-gray-400">
+                            {timeago(topic.createdAt)}
+                          </span>
+                        </div>
+                        <div className="text-xs" style={{ marginTop: '1px' }}>
+                          <Link href={`/go/${topic.node.slug}`}>
+                            <a className="text-gray-400 hover:text-gray-700">
+                              #{topic.node.name}
+                            </a>
+                          </Link>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-                <h1 className="text-xl font-medium">{topic.title}</h1>
-                <div className="mt-3">
-                  <div
-                    className="prose"
-                    dangerouslySetInnerHTML={{ __html: topic.html }}
-                  ></div>
-                </div>
-                <div className="mt-5 text-gray-400 text-xs -ml-2">
-                  <TopicLikeButton
-                    count={topic.likesCount}
-                    topicId={topic.id}
-                    isLiked={topic.isLiked}
-                  />
-                  <TopicReplyButton
-                    onClick={() => {
-                      setParentCommentId(null)
-                      setTimeout(() => {
-                        commentEditorRef.current?.focus()
-                      }, 0)
-                    }}
-                  />
-                </div>
-              </div>
-            </div>
-          )}
-
-          {commentsQuery.fetching && (
-            <div className="flex justify-center items-center p-8 border-t border-border">
-              <Spinner />
-            </div>
-          )}
-
-          {!commentsQuery.fetching && commentsQuery.data && (
-            <div className="divide-y divide-border border-t border-border">
-              {commentsQuery.data.comments.items.map((comment) => {
-                return (
-                  <Comment
-                    key={comment.id}
-                    comment={comment}
-                    handleClickReplyButton={() => {
-                      setParentCommentId(comment.id)
-                      setTimeout(() => {
-                        commentEditorRef.current?.focus()
-                      }, 0)
-                    }}
-                  />
-                )
-              })}
-            </div>
-          )}
-
-          {user && (
-            <div className="p-8 flex space-x-3 border-t border-border">
-              <div className="flex-shrink-0">
-                <Avatar
-                  size="w-10 h-10"
-                  username={user.username}
-                  avatar={user.avatar}
-                />
-              </div>
-              <div className="w-full overflow-hidden">
-                {parentComment && (
-                  <div className="mb-3 text-sm text-gray-500">
-                    回复 {parentComment.author.username} 的评论 "
-                    {stripHTML(parentComment.html).slice(0, 40)}..." (
-                    <button
-                      className="text-blue-500"
+                  <h1 className="text-xl font-medium">{topic.title}</h1>
+                  <div className="mt-3">
+                    <div
+                      className="prose"
+                      dangerouslySetInnerHTML={{ __html: topic.html }}
+                    ></div>
+                  </div>
+                  <div className="mt-5 text-gray-400 text-xs -ml-1">
+                    <TopicLikeButton
+                      count={topic.likesCount}
+                      topicId={topic.id}
+                      isLiked={topic.isLiked}
+                    />
+                    <TopicReplyButton
                       onClick={() => {
                         setParentCommentId(null)
+                        setTimeout(() => {
+                          commentEditorRef.current?.focus()
+                        }, 0)
                       }}
-                    >
-                      取消
-                    </button>
-                    )
+                    />
                   </div>
-                )}
-                <form onSubmit={commentForm.handleSubmit}>
-                  <textarea
-                    name="content"
-                    ref={commentEditorRef}
-                    className="resize-none w-full rounded-md focus:outline-none"
-                    value={commentForm.values.content}
-                    onChange={commentForm.handleChange}
-                    onBlur={commentForm.handleBlur}
-                    placeholder="添加回复.."
-                    required
-                    rows={5}
-                  ></textarea>
-                  <div className="mt-3">
-                    <Button
-                      type="submit"
-                      size="small"
-                      isLoading={commentForm.isSubmitting}
-                    >
-                      回复
-                    </Button>
-                  </div>
-                </form>
+                </div>
               </div>
-            </div>
-          )}
-        </MainPanel>
-      </div>
+            )}
+
+            {commentsQuery.fetching && (
+              <div className="flex justify-center items-center p-6 border-t border-border">
+                <Spinner />
+              </div>
+            )}
+
+            {!commentsQuery.fetching &&
+              commentsQuery.data &&
+              commentsQuery.data.comments.items.length > 0 && (
+                <div className="divide-y divide-border border-t border-border">
+                  {commentsQuery.data.comments.items.map((comment) => {
+                    return (
+                      <Comment
+                        key={comment.id}
+                        comment={comment}
+                        handleClickReplyButton={() => {
+                          setParentCommentId(comment.id)
+                          setTimeout(() => {
+                            commentEditorRef.current?.focus()
+                          }, 0)
+                        }}
+                      />
+                    )
+                  })}
+                </div>
+              )}
+
+            {user && (
+              <div className="p-6 flex space-x-3 border-t border-border">
+                <div className="w-full overflow-hidden">
+                  {parentComment && (
+                    <div className="mb-3 text-sm text-gray-500">
+                      回复 {parentComment.author.username} 的评论 "
+                      {stripHTML(parentComment.html).slice(0, 40)}..." (
+                      <button
+                        className="text-blue-500"
+                        onClick={() => {
+                          setParentCommentId(null)
+                        }}
+                      >
+                        取消
+                      </button>
+                      )
+                    </div>
+                  )}
+                  <form onSubmit={commentForm.handleSubmit}>
+                    <textarea
+                      name="content"
+                      ref={commentEditorRef}
+                      className="resize-none w-full rounded-md focus:outline-none"
+                      value={commentForm.values.content}
+                      onChange={commentForm.handleChange}
+                      onBlur={commentForm.handleBlur}
+                      placeholder="添加回复.."
+                      required
+                      rows={5}
+                    ></textarea>
+                    <div className="mt-3">
+                      <Button
+                        type="submit"
+                        size="small"
+                        isLoading={commentForm.isSubmitting}
+                      >
+                        回复
+                      </Button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            )}
+          </>
+        )}
+      />
     </AuthProvider>
   )
 }

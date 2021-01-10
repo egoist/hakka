@@ -1,62 +1,13 @@
 :root {
-  --body-bg: #e5e5e5;
+  --body-bg: #f2f3f5;
   --main-bg: #f6f6f6;
   --border-color: #e0e0e0;
   --panel-header-height: 50px;
+  --theme-color: #f60;
 }
 
 body {
   background-color: var(--body-bg);
-}
-
-.main {
-  @apply xl:max-w-7xl;
-  @apply h-screen;
-  @apply mx-auto;
-  @apply bg-main-bg;
-  @apply flex;
-}
-
-.left-panel {
-  width: 100%;
-  @apply relative;
-}
-
-.left-panel.is-hidden {
-  display: none;
-}
-
-@screen md {
-  .left-panel {
-    width: 380px;
-  }
-
-  .left-panel.is-hidden {
-    display: block;
-  }
-}
-
-.panel-header {
-  height: var(--panel-header-height);
-  @apply fixed;
-  @apply w-full;
-  @apply bg-white;
-}
-
-.panel-content {
-  padding-top: var(--panel-header-height);
-  @apply bg-white;
-}
-
-@screen md {
-  .panel-header {
-    @apply relative;
-  }
-  .panel-content {
-    height: calc(100% - var(--panel-header-height));
-    @apply overflow-y-auto;
-    @apply pt-0;
-  }
 }
 
 .input,
