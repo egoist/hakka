@@ -61,7 +61,7 @@ const NewTopicPage: React.FC<PageProps> = ({ user }) => {
       id: topicId as number,
     },
     pause: !topicId,
-    requestPolicy: 'cache-and-network',
+    requestPolicy: 'network-only',
   })
   const topic = topicQuery.data?.topicById
   const form = useFormik<{ title: string; content: string; nodeId: number }>({
