@@ -22,6 +22,7 @@ import { queryGraphql } from '@server/lib/graphql'
 import { Spinner } from '@src/components/Spinner'
 import { Comment } from '@src/components/Comment'
 import { Main } from '@src/components/Main'
+import { Avatar } from '@src/components/Avatar'
 
 type PageProps = {
   user: AuthUser | null
@@ -121,8 +122,15 @@ const TopicPage: React.FC<PageProps> = ({ user, topicQuery }) => {
             {topic && (
               <div className="">
                 <div className="p-6 bg-white">
-                  <div className="flex mb-3 text-gray-500 text-sm">
-                    <div className=" w-full">
+                  <div className="flex mb-3 text-gray-500 text-sm space-x-2 items-center">
+                    <div className="flex-shrink-0">
+                      <Avatar
+                        size="w-9 h-9"
+                        avatar={topic.author.avatar}
+                        username={topic.author.username}
+                      />
+                    </div>
+                    <div className="w-full">
                       <div>
                         <Link href={`/u/${topic.author.username}`}>
                           <a className="font-medium text-gray-900">
