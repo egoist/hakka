@@ -12,14 +12,24 @@ export const Header: React.FC<{
   const { user } = useAuth()
   const [showDropdown, setShowDropdown] = React.useState(false)
 
-  const [notificationsCountQuery] = useNotificationsCountQuery({
+  const [
+    notificationsCountQuery,
+    refetchNotificationsCount,
+  ] = useNotificationsCountQuery({
     pause: !user,
     requestPolicy: 'cache-and-network',
-    pollInterval: 30 * 1000,
   })
   const hasNotifications =
     typeof notificationsCountQuery.data?.notificationsCount === 'number' &&
     notificationsCountQuery.data.notificationsCount > 0
+
+  React.useEffect(() => {
+    const internal = setInterval(() => {
+      refetchNotificationsCount()
+    }, 30 * 1000)
+
+    return () => clearInterval(internal)
+  }, [])
 
   return (
     <>
