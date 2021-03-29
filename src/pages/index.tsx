@@ -55,11 +55,11 @@ const HomePage: React.FC<PageProps> = ({ user }) => {
               </div>
             )}
             {topics && (
-              <div className="">
+              <div className="space-y-6">
                 {topics.map((topic) => {
                   return (
                     <div key={topic.id}>
-                      <span className={clsx(`px-6 py-4 flex justify-between`)}>
+                      <span className={clsx(`flex justify-between`)}>
                         <div>
                           <h2 className="text-lg leading-snug">
                             {topic.externalLink ? (
@@ -117,7 +117,7 @@ const HomePage: React.FC<PageProps> = ({ user }) => {
                 })}
               </div>
             )}
-            <div className="px-6 pt-8 space-x-3">
+            <div className="pt-8 space-x-3">
               {page > 1 && (
                 <Link href={{ query: { page: page - 1 } }}>
                   <a className="inline-block border-1 border-border py-1 px-2 text-sm hover:bg-border">

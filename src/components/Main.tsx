@@ -12,7 +12,7 @@ export const Main: React.FC<{
       <Header />
       <div
         className={clsx(
-          `relative max-w-3xl mx-auto mt-18 mb-8`,
+          `relative max-w-3xl mx-auto mt-18 mb-8 px-6`,
           hideLeftPanel && 'is-hidden',
         )}
       >

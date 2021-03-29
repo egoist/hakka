@@ -58,7 +58,7 @@ const NotificationsPage: React.FC<PageProps> = ({ user }) => {
       </Head>
       <Main
         render={() => (
-          <div className="p-5 divide-y divide-border">
+          <div className="divide-y divide-border">
             {notificationsQuery.fetching && (
               <div className="lex justify-center">
                 <Spinner />

@@ -98,7 +98,7 @@ const NewTopicPage: React.FC<PageProps> = ({ user }) => {
       </Head>
       <Main
         render={() => (
-          <div className="p-6">
+          <div className="">
             <form className="" onSubmit={form.handleSubmit}>
               <div className="">
                 <input
