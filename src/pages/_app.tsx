@@ -1,6 +1,6 @@
 import 'windi.css'
 import '../css/main.css'
-import '../css/prose.css'
+import '../css/markdown.css'
 import React from 'react'
 import { useUrqlClient } from '@src/lib/urql-client'
 import { Provider as UrqlProvider } from 'urql'

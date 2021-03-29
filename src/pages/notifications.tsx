@@ -89,7 +89,7 @@ const NotificationsPage: React.FC<PageProps> = ({ user }) => {
                           回复了主题 "{topicComment.topic.title}"
                         </div>
                         <div
-                          className="prose bg-border rounded-md p-3 mt-3"
+                          className="markdown-body bg-border rounded-md p-3 mt-3"
                           dangerouslySetInnerHTML={{
                             __html: topicComment.html,
                           }}
@@ -117,7 +117,7 @@ const NotificationsPage: React.FC<PageProps> = ({ user }) => {
                           {commentReply.topic.title}" 回复了你:
                         </div>
                         <div
-                          className="prose rounded-md bg-border p-3 mt-3"
+                          className="markdown-body rounded-md bg-border p-3 mt-3"
                           dangerouslySetInnerHTML={{
                             __html: commentReply.html,
                           }}

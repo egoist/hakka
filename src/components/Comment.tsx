@@ -40,8 +40,8 @@ export const Comment: React.FC<{
             username={comment.author.username}
           />
         </div>
-        <div>
-          <div className="mb-1 text-sm text-fg-light">
+        <div className="w-full">
+          <div className="mb-3 text-sm text-fg-light">
             <Link href={`/u/${comment.author.username}`}>
               <a className="font-medium">{comment.author.username}</a>
             </Link>
@@ -59,7 +59,7 @@ export const Comment: React.FC<{
                   :
                 </div>
                 <div
-                  className="prose"
+                  className="markdown-body"
                   dangerouslySetInnerHTML={{
                     __html: comment.parent.html,
                   }}
@@ -67,7 +67,7 @@ export const Comment: React.FC<{
               </div>
             )}
             <div
-              className="prose"
+              className="markdown-body"
               dangerouslySetInnerHTML={{ __html: comment.html }}
             ></div>
           </div>

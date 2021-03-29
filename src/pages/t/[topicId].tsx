@@ -158,7 +158,6 @@ const TopicPage: React.FC<PageProps> = ({ user, topicQuery }) => {
                           href={topic.externalLink.url}
                           target="_blank"
                           rel="noopener nofollow"
-                          className="underline"
                         >
                           {topic.title}
                         </a>
@@ -172,7 +171,7 @@ const TopicPage: React.FC<PageProps> = ({ user, topicQuery }) => {
                   </h1>
                   <div className="mt-3">
                     <div
-                      className="prose"
+                      className="markdown-body"
                       dangerouslySetInnerHTML={{ __html: topic.html }}
                     ></div>
                   </div>

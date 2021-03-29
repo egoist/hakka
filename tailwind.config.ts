@@ -6,6 +6,7 @@ export default defineConfig({
     extend: {
       colors: {
         'body-bg': 'var(--body-bg)',
+        'body-bg-lighter': 'var(--body-bg-lighter)',
         'main-bg': 'var(--main-bg)',
         border: 'var(--border-color)',
         theme: `var(--theme-color)`,
@@ -14,5 +15,4 @@ export default defineConfig({
       },
     },
   },
-  plugins: [require('windicss/plugin/typography')],
 })
