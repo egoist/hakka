@@ -23,6 +23,11 @@
   @apply underline;
 }
 
+.prose > ul,
+.prose > ol {
+  padding-left: 0;
+}
+
 .prose ol > li:before {
   @apply text-fg;
 }
