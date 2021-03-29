@@ -26,6 +26,7 @@ export type Query = {
   currentUser: CurrentUser;
   notifications: Array<Notification>;
   notificationsCount: Scalars['Int'];
+  profile: Profile;
 };
 
 
@@ -45,6 +46,11 @@ export type QueryCommentsArgs = {
   take?: Maybe<Scalars['Int']>;
   page?: Maybe<Scalars['Int']>;
   order?: Maybe<Sort_Order>;
+};
+
+
+export type QueryProfileArgs = {
+  username: Scalars['String'];
 };
 
 export type TopicsConnection = {
@@ -158,6 +164,14 @@ export type CommentReplyData = {
   __typename?: 'CommentReplyData';
   type: Scalars['String'];
   replyComment: Comment;
+};
+
+export type Profile = {
+  __typename?: 'Profile';
+  id: Scalars['Int'];
+  username: Scalars['String'];
+  avatar?: Maybe<Scalars['String']>;
+  createdAt: Scalars['DateTime'];
 };
 
 export type Mutation = {
@@ -350,6 +364,19 @@ export type NotificationsCountQuery = (
   & Pick<Query, 'notificationsCount'>
 );
 
+export type ProfileQueryVariables = Exact<{
+  username: Scalars['String'];
+}>;
+
+
+export type ProfileQuery = (
+  { __typename?: 'Query' }
+  & { profile: (
+    { __typename?: 'Profile' }
+    & Pick<Profile, 'id' | 'avatar' | 'createdAt'>
+  ) }
+);
+
 export type TopicQueryVariables = Exact<{
   id: Scalars['Int'];
 }>;
@@ -474,6 +501,11 @@ export const NotificationsCountDocument: DocumentNode = {"kind":"Document","defi
 
 export function useNotificationsCountQuery(options: Omit<Urql.UseQueryArgs<NotificationsCountQueryVariables>, 'query'> = {}) {
   return Urql.useQuery<NotificationsCountQuery>({ query: NotificationsCountDocument, ...options });
+};
+export const ProfileDocument: DocumentNode = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"profile"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"username"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"profile"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"username"},"value":{"kind":"Variable","name":{"kind":"Name","value":"username"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"avatar"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}}]}}]}}]};
+
+export function useProfileQuery(options: Omit<Urql.UseQueryArgs<ProfileQueryVariables>, 'query'> = {}) {
+  return Urql.useQuery<ProfileQuery>({ query: ProfileDocument, ...options });
 };
 export const TopicDocument: DocumentNode = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"topic"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"topicById"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"html"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"likesCount"}},{"kind":"Field","name":{"kind":"Name","value":"isLiked"}},{"kind":"Field","name":{"kind":"Name","value":"author"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"username"}},{"kind":"Field","name":{"kind":"Name","value":"avatar"}}]}},{"kind":"Field","name":{"kind":"Name","value":"externalLink"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"url"}},{"kind":"Field","name":{"kind":"Name","value":"domain"}}]}}]}}]}}]};
 

@@ -1,0 +1,7 @@
+query profile($username: String!) {
+  profile(username: $username) {
+    id
+    avatar
+    createdAt
+  }
+}

@@ -60,6 +60,11 @@ export const Header: React.FC<{}> = () => {
                 </a>
               </Link>
             )}
+            {user && (
+              <Link href={`/u/${user.username}`}>
+                <a className="hover:text-theme">{user.username}</a>
+              </Link>
+            )}
             {!user && (
               <Link href="/login">
                 <a className="h-full hover:text-theme inline-flex justify-center items-center focus:outline-none">
