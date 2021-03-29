@@ -10,6 +10,7 @@ import clsx from 'clsx'
 import Link from 'next/link'
 import { useTopicsQuery } from '@src/generated/graphql'
 import { Main } from '@src/components/Main'
+import { useRouter } from 'next/router'
 
 type PageProps = {
   user: AuthUser | null
@@ -27,9 +28,13 @@ export const getServerSideProps: GetServerSideProps<PageProps> = async (
 }
 
 const HomePage: React.FC<PageProps> = ({ user }) => {
+  const router = useRouter()
+  const page = Number(router.query.page || 1)
+  const take = 26
   const [topicsQuery] = useTopicsQuery({
     variables: {
-      page: 1,
+      page,
+      take,
     },
     requestPolicy: 'cache-and-network',
   })
@@ -112,6 +117,22 @@ const HomePage: React.FC<PageProps> = ({ user }) => {
                 })}
               </div>
             )}
+            <div className="px-6 pt-8 space-x-3">
+              {page > 1 && (
+                <Link href={{ query: { page: page - 1 } }}>
+                  <a className="inline-block border-1 border-border py-1 px-2 text-sm hover:bg-border">
+                    上一页
+                  </a>
+                </Link>
+              )}
+              {topics && topics.length === take && (
+                <Link href={{ query: { page: page + 1 } }}>
+                  <a className="inline-block border-1 border-border py-1 px-2 text-sm hover:bg-border">
+                    下一页
+                  </a>
+                </Link>
+              )}
+            </div>
           </div>
         )}
       />

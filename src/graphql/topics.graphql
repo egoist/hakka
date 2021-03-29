@@ -1,5 +1,5 @@
-query topics($page: Int!) {
-  topics(page: $page) {
+query topics($page: Int!, $take: Int) {
+  topics(page: $page, take: $take) {
     hasNext
     items {
       id
