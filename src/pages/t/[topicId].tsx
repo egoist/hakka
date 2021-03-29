@@ -121,8 +121,8 @@ const TopicPage: React.FC<PageProps> = ({ user, topicQuery }) => {
           <>
             {topic && (
               <div className="">
-                <div className="p-6 bg-white">
-                  <div className="flex mb-3 text-gray-500 text-sm space-x-2 items-center">
+                <div className="">
+                  <div className="flex mb-3 text-sm space-x-2 items-center">
                     <div className="flex-shrink-0">
                       <Avatar
                         size="w-9 h-9"
@@ -133,39 +133,50 @@ const TopicPage: React.FC<PageProps> = ({ user, topicQuery }) => {
                     <div className="w-full">
                       <div>
                         <Link href={`/u/${topic.author.username}`}>
-                          <a className="font-medium text-gray-900">
-                            {topic.author.username}
-                          </a>
+                          <a className="font-medium">{topic.author.username}</a>
                         </Link>
-                        <span className="ml-2 text-xs text-gray-400">
+                        <span className="ml-2 text-xs">
                           {timeago(topic.createdAt)}
                         </span>
                       </div>
                       <div
-                        className="w-full text-xs flex items-center justify-between"
+                        className="w-full text-xs text-fg-light flex items-center justify-between"
                         style={{ marginTop: '1px' }}
                       >
-                        <Link href={`/go/${topic.node.slug}`}>
-                          <a className="text-gray-400 hover:text-gray-700">
-                            #{topic.node.name}
-                          </a>
-                        </Link>
                         {canEdit && (
                           <Link href={`/edit-topic/${topic.id}`}>
-                            <a className="text-blue-400">编辑</a>
+                            <a className="">编辑</a>
                           </Link>
                         )}
                       </div>
                     </div>
                   </div>
-                  <h1 className="text-xl font-medium">{topic.title}</h1>
+                  <h1 className="text-xl font-medium">
+                    {topic.externalLink ? (
+                      <span>
+                        <a
+                          href={topic.externalLink.url}
+                          target="_blank"
+                          rel="noopener nofollow"
+                          className="underline"
+                        >
+                          {topic.title}
+                        </a>
+                        <span className="ml-1 text-fg-light text-sm">
+                          ({topic.externalLink.domain})
+                        </span>
+                      </span>
+                    ) : (
+                      topic.title
+                    )}
+                  </h1>
                   <div className="mt-3">
                     <div
                       className="prose"
                       dangerouslySetInnerHTML={{ __html: topic.html }}
                     ></div>
                   </div>
-                  <div className="mt-5 text-gray-400 text-xs -ml-1">
+                  <div className="mt-5 text-xs -ml-1">
                     <TopicLikeButton
                       count={topic.likesCount}
                       topicId={topic.id}
@@ -185,7 +196,7 @@ const TopicPage: React.FC<PageProps> = ({ user, topicQuery }) => {
             )}
 
             {commentsQuery.fetching && (
-              <div className="flex justify-center items-center p-6 border-t border-border">
+              <div className="flex justify-center items-center p-6 mt-8 border-t border-border">
                 <Spinner />
               </div>
             )}
@@ -193,7 +204,7 @@ const TopicPage: React.FC<PageProps> = ({ user, topicQuery }) => {
             {!commentsQuery.fetching &&
               commentsQuery.data &&
               commentsQuery.data.comments.items.length > 0 && (
-                <div className="divide-y divide-border border-t border-border">
+                <div className="divide-y divide-border border-t border-border mt-8">
                   {commentsQuery.data.comments.items.map((comment) => {
                     return (
                       <Comment
@@ -211,15 +222,15 @@ const TopicPage: React.FC<PageProps> = ({ user, topicQuery }) => {
                 </div>
               )}
 
-            {user && (
-              <div className="p-6 flex space-x-3 border-t border-border">
-                <div className="w-full overflow-hidden">
+            {user && !commentsQuery.fetching && (
+              <div className="flex space-x-3 border-t border-border mt-5 pt-5">
+                <div className="w-full">
                   {parentComment && (
-                    <div className="mb-3 text-sm text-gray-500">
+                    <div className="mb-3 text-sm">
                       回复 {parentComment.author.username} 的评论 "
                       {stripHTML(parentComment.html).slice(0, 40)}..." (
                       <button
-                        className="text-blue-500"
+                        className=""
                         onClick={() => {
                           setParentCommentId(null)
                         }}
@@ -233,7 +244,7 @@ const TopicPage: React.FC<PageProps> = ({ user, topicQuery }) => {
                     <textarea
                       name="content"
                       ref={commentEditorRef}
-                      className="resize-none w-full rounded-md focus:outline-none"
+                      className="resize-none w-full bg-transparent focus:outline-none"
                       value={commentForm.values.content}
                       onChange={commentForm.handleChange}
                       onBlur={commentForm.handleBlur}

@@ -2,7 +2,6 @@ import { buildSchema } from 'type-graphql'
 import { AuthResolver } from '@server/resolvers/auth.resolver'
 import { CommentResolver } from '@server/resolvers/comment.resolver'
 import { CurrentUserResolver } from '@server/resolvers/current-user.resolver'
-import { NodeResolver } from '@server/resolvers/node.resolver'
 import { NotificationResolver } from '@server/resolvers/notification.resolver'
 import { TopicResolver } from '@server/resolvers/topic.resolver'
 import { DocumentNode, execute, GraphQLSchema, ExecutionResult } from 'graphql'
@@ -19,7 +18,6 @@ export const getSchema = async () => {
         AuthResolver,
         TopicResolver,
         CommentResolver,
-        NodeResolver,
         NotificationResolver,
       ],
     }))

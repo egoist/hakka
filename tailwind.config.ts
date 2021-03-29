@@ -1,5 +1,6 @@
-module.exports = {
-  purge: ['./src/**/*.tsx'],
+import { defineConfig } from 'windicss-webpack-plugin'
+
+export default defineConfig({
   darkMode: false, // or 'media' or 'class'
   theme: {
     extend: {
@@ -8,11 +9,10 @@ module.exports = {
         'main-bg': 'var(--main-bg)',
         border: 'var(--border-color)',
         theme: `var(--theme-color)`,
+        fg: `var(--fg)`,
+        'fg-light': `var(--fg-light)`,
       },
     },
   },
-  variants: {
-    extend: {},
-  },
-  plugins: [require('@tailwindcss/typography')],
-}
+  plugins: [require('windicss/plugin/typography')],
+})

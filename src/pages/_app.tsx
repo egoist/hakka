@@ -1,4 +1,4 @@
-import '../css/tailwind.css'
+import 'windi.css'
 import '../css/main.css'
 import '../css/prose.css'
 import React from 'react'
@@ -11,6 +11,7 @@ if (process.browser) {
 
   const progress = new ProgressBar.default({
     size: 3,
+    color: `var(--theme-color)`,
   })
 
   Router.events.on('routeChangeStart', () => {

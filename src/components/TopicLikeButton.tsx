@@ -30,7 +30,7 @@ export const TopicLikeButton: React.FC<{
   return (
     <button
       className={clsx(
-        `inline-flex items-center px-2 h-7 transition rounded-md hover:bg-gray-200 focus:outline-none`,
+        `inline-flex items-center px-2 h-7 transition rounded-md hover:text-orange-600 hover:bg-opacity-10 hover:bg-orange-100 focus:outline-none`,
         !actualIsLiked && `border-gray-500`,
         actualIsLiked && `text-red-500`,
         !user && 'cursor-default',

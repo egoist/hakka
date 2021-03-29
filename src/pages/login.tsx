@@ -39,8 +39,7 @@ const LoginPage: React.FC<PageProps> = ({ user }) => {
       <Main
         render={() => (
           <div className="text-center p-8">
-            <h2 className="text-xl font-medium">欢迎回来</h2>
-            <div className="p-5 bg-white rounded-md">
+            <div className="p-5">
               <a className="button" href={`/api/connect/github`}>
                 <svg
                   id="i-github"

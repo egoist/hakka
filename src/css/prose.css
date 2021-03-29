@@ -1,3 +1,7 @@
+.prose {
+  @apply text-white;
+}
+
 .prose > *:first-child {
   @apply mt-0;
 }

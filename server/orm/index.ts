@@ -2,7 +2,6 @@ import { createConnection, getConnectionManager, Connection } from 'typeorm'
 import { Comment } from './comment.entity'
 import { Topic } from './topic.entity'
 import { User } from './user.entity'
-import { Node } from './node.entity'
 import { Token } from './token.entity'
 import { UserTopicLike } from './user-topic-like.entity'
 import { Notification } from './notification.entity'
@@ -32,7 +31,6 @@ export async function getRepos() {
   const user = connection.getRepository(User)
   const topic = connection.getRepository(Topic)
   const comment = connection.getRepository(Comment)
-  const node = connection.getRepository(Node)
   const token = connection.getRepository(Token)
   const notification = connection.getRepository(Notification)
   const userTopicLike = connection.getRepository(UserTopicLike)
@@ -42,7 +40,6 @@ export async function getRepos() {
     user,
     topic,
     comment,
-    node,
     token,
     notification,
     userTopicLike,

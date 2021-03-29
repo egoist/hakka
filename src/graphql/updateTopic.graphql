@@ -1,10 +1,5 @@
-mutation updateTopic(
-  $id: Int!
-  $title: String
-  $content: String
-  $nodeId: Int
-) {
-  updateTopic(id: $id, title: $title, content: $content, nodeId: $nodeId) {
+mutation updateTopic($id: Int!, $title: String, $content: String) {
+  updateTopic(id: $id, title: $title, content: $content) {
     id
   }
 }

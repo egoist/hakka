@@ -1,7 +1,0 @@
-query nodesForNewTopic {
-  nodes {
-    id
-    slug
-    name
-  }
-}

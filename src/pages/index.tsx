@@ -27,7 +27,7 @@ export const getServerSideProps: GetServerSideProps<PageProps> = async (
 }
 
 const HomePage: React.FC<PageProps> = ({ user }) => {
-  const [topicsQuery, refetchTopicsQuery] = useTopicsQuery({
+  const [topicsQuery] = useTopicsQuery({
     variables: {
       page: 1,
     },
@@ -42,10 +42,8 @@ const HomePage: React.FC<PageProps> = ({ user }) => {
         <title>HAKKA!</title>
       </Head>
       <Main
-        refreshButtonCallback={refetchTopicsQuery}
-        isRefreshing={topicsQuery.stale}
         render={() => (
-          <div className="panel-content">
+          <div className="shadow-sm">
             {!topics && (
               <div className="py-8 flex justify-center">
                 <Spinner />
@@ -56,100 +54,57 @@ const HomePage: React.FC<PageProps> = ({ user }) => {
                 {topics.map((topic) => {
                   return (
                     <div key={topic.id}>
-                      <span
-                        className={clsx(
-                          `px-6 py-4 flex justify-between border-b border-border`,
-                        )}
-                      >
+                      <span className={clsx(`px-6 py-4 flex justify-between`)}>
                         <div>
                           <h2 className="text-lg leading-snug">
-                            <Link href={`/t/${topic.id}`}>
-                              <a>{topic.title}</a>
-                            </Link>
-                          </h2>
-                          <div className="text-xs">
-                            {topic.externalLink && (
+                            {topic.externalLink ? (
                               <a
                                 href={topic.externalLink.url}
-                                onClick={(e) => {
-                                  e.stopPropagation()
-                                }}
                                 target="_blank"
-                                rel="nofollow noopenner"
-                                className={clsx(
-                                  `inline-flex items-center`,
-                                  `text-theme`,
-                                )}
+                                rel="noopener nofollow"
                               >
-                                <svg
-                                  focusable="false"
-                                  width="1em"
-                                  height="1em"
-                                  viewBox="0 0 24 24"
-                                >
-                                  <g fill="none">
-                                    <path
-                                      d="M14 5a1 1 0 1 1 0-2h6a1 1 0 0 1 1 1v6a1 1 0 1 1-2 0V6.414l-9.293 9.293a1 1 0 0 1-1.414-1.414L17.586 5H14zM3 7a2 2 0 0 1 2-2h5a1 1 0 1 1 0 2H5v12h12v-5a1 1 0 1 1 2 0v5a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7z"
-                                      fill="currentColor"
-                                    ></path>
-                                  </g>
-                                </svg>
-                                <span style={{ marginLeft: '1px' }}>
-                                  {topic.externalLink.domain}
-                                </span>
+                                {topic.title}
                               </a>
+                            ) : (
+                              <Link href={`/t/${topic.id}`}>
+                                <a>{topic.title}</a>
+                              </Link>
                             )}
-                          </div>
+                            {topic.externalLink && (
+                              <span className="text-sm text-fg-light ml-2">
+                                ({topic.externalLink.domain})
+                              </span>
+                            )}
+                          </h2>
+
                           <div
                             className={clsx(
-                              `flex items-center flex-wrap text-xs mt-1`,
-                              `text-gray-400`,
+                              `flex items-center flex-wrap text-xs mt-2 text-fg-light`,
                             )}
                           >
-                            <Link href={`/go/${topic.node.slug}`}>
-                              <a className={clsx(`hover:text-theme`)}>
-                                #{topic.node.name}
-                              </a>
-                            </Link>
-                            <span className="mx-2">•</span>
-                            <span className="">
+                            <span>{topic.likesCount} points</span>
+                            <span className="ml-1">
                               by{' '}
                               <Link href={`/u/${topic.author.username}`}>
-                                <a className={clsx(`hover:text-theme`)}>
+                                <a
+                                  className={clsx(`underline hover:text-theme`)}
+                                >
                                   {topic.author.username}
                                 </a>
                               </Link>
                             </span>
-                            <span className="mx-2">•</span>
-                            <span>{timeago(topic.createdAt)}</span>
-                            {topic.lastComment && (
-                              <span className="mx-2">•</span>
-                            )}
-                            {topic.lastComment && (
-                              <span>
-                                最新回复来自{' '}
-                                <Link
-                                  href={`/u/${topic.lastComment.author.username}`}
-                                >
-                                  <a className={clsx(`hover:text-theme`)}>
-                                    {topic.lastComment.author.username}
-                                  </a>
-                                </Link>
-                              </span>
-                            )}
-                          </div>
-                        </div>
-                        <div className="w-12 flex-shrink-0 flex justify-end items-center">
-                          {topic.commentsCount > 0 && (
-                            <span
-                              className={clsx(
-                                `inline-flex rounded-full h-5 items-center px-3 text-xs font-bold`,
-                                `bg-gray-200 text-gray-400`,
-                              )}
-                            >
-                              {topic.commentsCount}
+                            <span className="ml-2">
+                              {timeago(topic.createdAt)}
                             </span>
-                          )}
+                            <span className="mx-2">|</span>
+                            <span>
+                              <Link href={`/t/${topic.id}`}>
+                                <a className="underline">
+                                  {topic.commentsCount} 条回复
+                                </a>
+                              </Link>
+                            </span>
+                          </div>
                         </div>
                       </span>
                     </div>

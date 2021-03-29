@@ -3,7 +3,6 @@ import { Button } from '@src/components/Button'
 import { useFormik } from 'formik'
 import {
   useCreateTopicMutation,
-  useNodesForNewTopicQuery,
   useTopicForEditQuery,
   useUpdateTopicMutation,
 } from '@src/generated/graphql'
@@ -45,16 +44,6 @@ const NewTopicPage: React.FC<PageProps> = ({ user }) => {
   const topicId = router.query.topicId && Number(router.query.topicId)
   const [, createTopicMutation] = useCreateTopicMutation()
   const [, updateTopicMutation] = useUpdateTopicMutation()
-  const [nodesForNewTopicQuery] = useNodesForNewTopicQuery({
-    requestPolicy: 'cache-and-network',
-  })
-  const nodes = nodesForNewTopicQuery.data?.nodes
-  const selectNodeOptions = nodes?.map((node) => {
-    return {
-      label: node.name,
-      value: node.id,
-    }
-  })
 
   const [topicQuery] = useTopicForEditQuery({
     variables: {
@@ -64,11 +53,11 @@ const NewTopicPage: React.FC<PageProps> = ({ user }) => {
     requestPolicy: 'network-only',
   })
   const topic = topicQuery.data?.topicById
-  const form = useFormik<{ title: string; content: string; nodeId: number }>({
+  const form = useFormik<{ title: string; content: string; url: string }>({
     initialValues: {
       title: '',
       content: '',
-      nodeId: 0,
+      url: '',
     },
     async onSubmit(values) {
       if (topicId) {
@@ -76,7 +65,6 @@ const NewTopicPage: React.FC<PageProps> = ({ user }) => {
           id: topicId,
           title: values.title,
           content: values.content,
-          nodeId: values.nodeId,
         })
         if (data) {
           router.push(`/t/${data.updateTopic.id}`)
@@ -85,7 +73,7 @@ const NewTopicPage: React.FC<PageProps> = ({ user }) => {
         const { data } = await createTopicMutation({
           title: values.title,
           content: values.content,
-          nodeId: values.nodeId,
+          url: values.url,
         })
         if (data) {
           router.push(`/t/${data.createTopic.id}`)
@@ -98,7 +86,7 @@ const NewTopicPage: React.FC<PageProps> = ({ user }) => {
     if (topic) {
       form.setFieldValue('title', topic.title)
       form.setFieldValue('content', topic.content)
-      form.setFieldValue('nodeId', topic.nodeId)
+      form.setFieldValue('url', topic.url)
     }
   }, [topicQuery.fetching])
 
@@ -112,26 +100,6 @@ const NewTopicPage: React.FC<PageProps> = ({ user }) => {
         render={() => (
           <div className="p-6">
             <form className="" onSubmit={form.handleSubmit}>
-              <div className=" mb-4">
-                <Select
-                  name="nodeId"
-                  id="topic-node"
-                  classNamePrefix="select-node"
-                  placeholder="选择一个节点"
-                  value={selectNodeOptions?.find(
-                    (option) => option.value === form.values.nodeId,
-                  )}
-                  // Use this for debugging:
-                  // menuIsOpen={true}
-                  onChange={(option) => {
-                    if (option) {
-                      form.setFieldValue('nodeId', option.value)
-                    }
-                  }}
-                  options={selectNodeOptions}
-                  noOptionsMessage={() => `找不到匹配的节点`}
-                />
-              </div>
               <div className="">
                 <input
                   type="text"
@@ -144,6 +112,26 @@ const NewTopicPage: React.FC<PageProps> = ({ user }) => {
                   onChange={form.handleChange}
                   onBlur={form.handleBlur}
                 />
+                {topicId ? (
+                  form.values.url && (
+                    <div className="mt-3 text-fg-light text-xs">
+                      已提交的网址不可更改: {form.values.url}
+                    </div>
+                  )
+                ) : (
+                  <div className="mt-3">
+                    <input
+                      type="url"
+                      name="url"
+                      id="topic-url"
+                      placeholder="网址"
+                      className="input w-full"
+                      value={form.values.url}
+                      onChange={form.handleChange}
+                      onBlur={form.handleBlur}
+                    />
+                  </div>
+                )}
                 <div className="mt-3">
                   <textarea
                     id="topic-content"
@@ -156,6 +144,13 @@ const NewTopicPage: React.FC<PageProps> = ({ user }) => {
                     onBlur={form.handleBlur}
                   ></textarea>
                 </div>
+
+                {!topicId && (
+                  <div className="mt-3 text-xs text-fg-light">
+                    网址是可选的，如果要提交一个问题供讨论，请将网址留空。
+                  </div>
+                )}
+
                 <div className="mt-5">
                   <Button type="submit" isLoading={form.isSubmitting}>
                     {topicId ? `更新主题` : `发表主题`}

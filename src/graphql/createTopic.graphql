@@ -1,5 +1,5 @@
-mutation createTopic($title: String!, $content: String!, $nodeId: Int!) {
-  createTopic(title: $title, content: $content, nodeId: $nodeId) {
+mutation createTopic($title: String!, $content: String!, $url: String) {
+  createTopic(title: $title, content: $content, url: $url) {
     id
   }
 }

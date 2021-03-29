@@ -6,15 +6,14 @@ query topic($id: Int!) {
     createdAt
     likesCount
     isLiked
-    node {
-      id
-      name
-      slug
-    }
     author {
       id
       username
       avatar
+    }
+    externalLink {
+      url
+      domain
     }
   }
 }

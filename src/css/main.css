@@ -1,28 +1,32 @@
 :root {
-  --body-bg: #f2f3f5;
+  --body-bg: #333;
   --main-bg: #f6f6f6;
-  --border-color: #e0e0e0;
+  --fg: #eee;
+  --fg-light: #aaa;
+  --border-color: rgb(255 255 255 / 10%);
   --panel-header-height: 50px;
   --theme-color: #f60;
 }
 
 body {
-  background-color: var(--body-bg);
+  @apply bg-body-bg;
+  @apply text-fg;
 }
 
 .input,
 .textarea {
-  @apply border;
+  @apply border-1;
   @apply border-border;
   @apply rounded;
   @apply px-3;
   @apply h-12;
   @apply transition;
   @apply inline-flex;
+  @apply bg-transparent;
   @apply focus:outline-none;
   @apply focus:ring-1;
-  @apply focus:ring-blue-500;
-  @apply focus:border-blue-500;
+  @apply focus:ring-orange-600;
+  @apply focus:border-orange-500;
 }
 
 .textarea {
@@ -32,7 +36,7 @@ body {
 }
 
 .button {
-  @apply bg-blue-500;
+  @apply bg-orange-500;
   @apply text-white;
   @apply rounded-md;
   @apply px-3;
@@ -40,11 +44,11 @@ body {
   @apply inline-flex;
   @apply items-center;
   @apply justify-center;
-  @apply border;
-  @apply border-blue-500;
+  @apply border-1;
+  @apply border-orange-500;
 
   @apply focus:ring-2;
-  @apply focus:ring-blue-200;
+  @apply focus:ring-orange-700;
   @apply focus:outline-none;
 }
 
@@ -60,10 +64,9 @@ body {
 }
 
 .button.is-secondary {
-  @apply border-gray-300;
-  @apply bg-gray-50;
-  @apply text-gray-700;
-  @apply focus:ring-gray-400;
+  @apply border-border;
+  @apply bg-border;
+  @apply focus:ring-gray-500;
 }
 
 .select-node__control {

@@ -15,7 +15,6 @@ import {
   FieldResolver,
   Root,
 } from 'type-graphql'
-import { Node } from './node.resolver'
 import { Comment } from './comment.resolver'
 import { getConnection } from '@server/orm'
 import { parseURL } from '@server/lib/utils'
@@ -104,8 +103,8 @@ class CreateTopicArgs {
   @Field()
   content: string
 
-  @Field((type) => Int)
-  nodeId: number
+  @Field({ nullable: true })
+  url?: string
 }
 
 @ArgsType()
@@ -208,17 +207,6 @@ export class TopicResolver {
     return count
   }
 
-  @FieldResolver((returns) => Node)
-  async node(@Root() topic: Topic) {
-    const repos = await getRepos()
-    const node = await repos.node.findOne({
-      where: {
-        id: topic.nodeId,
-      },
-    })
-    return node
-  }
-
   @FieldResolver((returns) => Int)
   async likesCount(@Root() topic: Topic) {
     const repos = await getRepos()
@@ -255,7 +243,9 @@ export class TopicResolver {
 
   @FieldResolver((returns) => TopicExternalLink, { nullable: true })
   externalLink(@Root() topic: Topic) {
-    const url = parseURL(topic.content.trim().split(/[\s\n]/)[0])
+    const url = topic.url
+      ? new URL(topic.url)
+      : parseURL(topic.content.trim().split(/[\s\n]/)[0])
     if (url) {
       return {
         url: url.href,
@@ -269,20 +259,11 @@ export class TopicResolver {
     const user = requireAuth(ctx)
     const repos = await getRepos()
 
-    const node = await repos.node.findOne({
-      where: {
-        id: args.nodeId,
-      },
-    })
-    if (!node) {
-      throw new ApolloError(`相关节点不存在`)
-    }
-
     const topic = repos.topic.create({
       authorId: user.id,
       title: args.title,
       content: args.content,
-      nodeId: args.nodeId,
+      url: args.url,
     })
 
     await repos.topic.save(topic)
@@ -306,15 +287,6 @@ export class TopicResolver {
     // Allow the author and admins to update the topic
     if (topic.authorId !== user.id && !isAdmin(user)) {
       throw new ApolloError(`没有访问权限`)
-    }
-
-    const node = await repos.node.findOne({
-      where: {
-        id: args.nodeId,
-      },
-    })
-    if (!node) {
-      throw new ApolloError(`相关节点不存在`)
     }
 
     Object.assign(topic, {

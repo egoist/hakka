@@ -81,7 +81,7 @@ const NotificationsPage: React.FC<PageProps> = ({ user }) => {
                       <div className="p-5">
                         <div>
                           <Link href={`/u/${topicComment.author.username}`}>
-                            <a className="text-blue-500">
+                            <a className="text-orange-500">
                               {topicComment.author.username}
                             </a>
                           </Link>{' '}
@@ -89,7 +89,7 @@ const NotificationsPage: React.FC<PageProps> = ({ user }) => {
                           回复了主题 "{topicComment.topic.title}"
                         </div>
                         <div
-                          className="prose bg-gray-100 rounded-md p-3 mt-3"
+                          className="prose bg-border rounded-md p-3 mt-3"
                           dangerouslySetInnerHTML={{
                             __html: topicComment.html,
                           }}
@@ -117,7 +117,7 @@ const NotificationsPage: React.FC<PageProps> = ({ user }) => {
                           {commentReply.topic.title}" 回复了你:
                         </div>
                         <div
-                          className="prose bg-gray-100 rounded-md p-3 mt-3"
+                          className="prose rounded-md bg-border p-3 mt-3"
                           dangerouslySetInnerHTML={{
                             __html: commentReply.html,
                           }}

@@ -72,6 +72,9 @@ module.exports = {
       config.plugins.push(new FixServerReloadPlugin())
     }
 
+    const WindiCSSPlugin = require('windicss-webpack-plugin').default
+    config.plugins.push(new WindiCSSPlugin())
+
     return config
   },
 }

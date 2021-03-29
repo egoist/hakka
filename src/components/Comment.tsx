@@ -29,10 +29,10 @@ export const Comment: React.FC<{
   return (
     <div
       ref={el}
-      className={clsx(`flex space-x-3 p-6`, isActive && `bg-yellow-50`)}
+      className={clsx(`flex space-x-3 py-5`, isActive && `bg-border`)}
       id={`comment-${comment.id}`}
     >
-      <div className="w-full flex space-x-2">
+      <div className="w-full flex space-x-4">
         <div className="flex-shrink-0">
           <Avatar
             size="w-9 h-9"
@@ -41,18 +41,16 @@ export const Comment: React.FC<{
           />
         </div>
         <div>
-          <div className="mb-1 text-gray-400 text-sm">
+          <div className="mb-1 text-sm text-fg-light">
             <Link href={`/u/${comment.author.username}`}>
-              <a className="font-medium text-gray-600">
-                {comment.author.username}
-              </a>
+              <a className="font-medium">{comment.author.username}</a>
             </Link>
             <span className="ml-3 text-xs">{timeago(comment.createdAt)}</span>
           </div>
           <div>
             {comment.parent && (
               <div className="border-l-4 border-border pl-3 my-2">
-                <div className="text-xs text-gray-400">
+                <div className="text-xs">
                   <Link href={`/u/${comment.parent.author.username}`}>
                     <a className="font-medium">
                       {comment.parent.author.username}
@@ -61,7 +59,7 @@ export const Comment: React.FC<{
                   :
                 </div>
                 <div
-                  className="prose text-gray-500"
+                  className="prose"
                   dangerouslySetInnerHTML={{
                     __html: comment.parent.html,
                   }}
@@ -73,7 +71,7 @@ export const Comment: React.FC<{
               dangerouslySetInnerHTML={{ __html: comment.html }}
             ></div>
           </div>
-          <div className="text-xs mt-3 -ml-2 text-gray-400">
+          <div className="text-xs mt-3 -ml-2 text-fg-light">
             <CommentLikeButton
               commentId={comment.id}
               count={comment.likesCount}

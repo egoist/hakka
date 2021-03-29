@@ -3,7 +3,7 @@ query topicForEdit($id: Int!) {
     id
     title
     content
-    nodeId
+    url
     author {
       id
     }
