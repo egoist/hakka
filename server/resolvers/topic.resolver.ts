@@ -243,14 +243,12 @@ export class TopicResolver {
 
   @FieldResolver((returns) => TopicExternalLink, { nullable: true })
   externalLink(@Root() topic: Topic) {
-    const url = topic.url
-      ? new URL(topic.url)
-      : parseURL(topic.content.trim().split(/[\s\n]/)[0])
-    if (url) {
-      return {
-        url: url.href,
-        domain: url.hostname.replace(/^www\./, ''),
-      }
+    if (!topic.url) return null
+
+    const url = new URL(topic.url)
+    return {
+      url: url.href,
+      domain: url.hostname.replace(/^www\./, ''),
     }
   }
 
