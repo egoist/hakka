@@ -58,14 +58,14 @@ const NotificationsPage: React.FC<PageProps> = ({ user }) => {
       </Head>
       <Main
         render={() => (
-          <div className="divide-y">
+          <div className="p-5 divide-y divide-border">
             {notificationsQuery.fetching && (
-              <div className="p-5 flex justify-center">
+              <div className="lex justify-center">
                 <Spinner />
               </div>
             )}
             {items && items.length === 0 && (
-              <div className="text-center p-5">没有新消息</div>
+              <div className="text-center">没有新消息</div>
             )}
             {items &&
               items.map((item) => {
@@ -76,9 +76,9 @@ const NotificationsPage: React.FC<PageProps> = ({ user }) => {
                   item.resolvedData.__typename === 'CommentReplyData' &&
                   item.resolvedData.replyComment
                 return (
-                  <div key={item.id}>
+                  <div key={item.id} className="py-8 first:pt-0">
                     {topicComment && (
-                      <div className="p-5">
+                      <div className="">
                         <div>
                           <Link href={`/u/${topicComment.author.username}`}>
                             <a className="text-orange-500">
@@ -106,10 +106,10 @@ const NotificationsPage: React.FC<PageProps> = ({ user }) => {
                       </div>
                     )}
                     {commentReply && (
-                      <div className="p-5">
+                      <div className="">
                         <div>
                           <Link href={`/u/${commentReply.author.username}`}>
-                            <a className="text-blue-500">
+                            <a className="text-orange-500">
                               {commentReply.author.username}
                             </a>
                           </Link>{' '}
