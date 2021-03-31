@@ -4,6 +4,7 @@ import { NextApiRequest } from 'next'
 import Iron from '@hapi/iron'
 import { getRepos } from '@server/orm'
 import { AUTH_COOKIE_NAME } from './constants'
+import { isAdmin } from '@server/guards/require-auth'
 
 export type CookieUserPayload = {
   userId: number
@@ -31,6 +32,7 @@ export type AuthUser = {
   id: number
   username: string
   avatar?: string
+  isAdmin: boolean
 }
 
 export const getServerSession = async (
@@ -57,6 +59,7 @@ export const getServerSession = async (
           id: user.id,
           username: user.username,
           avatar: user.avatar,
+          isAdmin: isAdmin({ id: user.id }),
         }
       : null,
   }

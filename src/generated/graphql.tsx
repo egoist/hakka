@@ -74,6 +74,7 @@ export type Topic = {
   url?: Maybe<Scalars['String']>;
   /** If this topic content is a url, this field will be filled with the domain name */
   domain?: Maybe<Scalars['String']>;
+  hidden?: Maybe<Scalars['Boolean']>;
   author: TopicAuthor;
   html: Scalars['String'];
   commentsCount: Scalars['Int'];
@@ -140,6 +141,7 @@ export type CurrentUser = {
   email: Scalars['String'];
   username: Scalars['String'];
   avatar?: Maybe<Scalars['String']>;
+  isAdmin: Scalars['Boolean'];
 };
 
 export type Notification = {
@@ -181,6 +183,7 @@ export type Mutation = {
   createTopic: Topic;
   updateTopic: Topic;
   likeTopic: Scalars['Boolean'];
+  hideTopic: Scalars['Boolean'];
   createComment: Comment;
   likeComment: Scalars['Boolean'];
   markAllNotificationsAsRead: Scalars['Boolean'];
@@ -204,6 +207,12 @@ export type MutationUpdateTopicArgs = {
 
 export type MutationLikeTopicArgs = {
   topicId: Scalars['Int'];
+};
+
+
+export type MutationHideTopicArgs = {
+  hide: Scalars['Boolean'];
+  id: Scalars['Int'];
 };
 
 
@@ -286,6 +295,17 @@ export type CreateTopicMutation = (
     { __typename?: 'Topic' }
     & Pick<Topic, 'id'>
   ) }
+);
+
+export type HideTopicMutationVariables = Exact<{
+  id: Scalars['Int'];
+  hide: Scalars['Boolean'];
+}>;
+
+
+export type HideTopicMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'hideTopic'>
 );
 
 export type LikeCommentMutationVariables = Exact<{
@@ -386,7 +406,7 @@ export type TopicQuery = (
   { __typename?: 'Query' }
   & { topicById: (
     { __typename?: 'Topic' }
-    & Pick<Topic, 'id' | 'title' | 'html' | 'createdAt' | 'likesCount' | 'isLiked'>
+    & Pick<Topic, 'id' | 'title' | 'html' | 'createdAt' | 'likesCount' | 'isLiked' | 'hidden'>
     & { author: (
       { __typename?: 'TopicAuthor' }
       & Pick<TopicAuthor, 'id' | 'username' | 'avatar'>
@@ -477,6 +497,11 @@ export const CreateTopicDocument: DocumentNode = {"kind":"Document","definitions
 export function useCreateTopicMutation() {
   return Urql.useMutation<CreateTopicMutation, CreateTopicMutationVariables>(CreateTopicDocument);
 };
+export const HideTopicDocument: DocumentNode = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"hideTopic"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"hide"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Boolean"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"hideTopic"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}},{"kind":"Argument","name":{"kind":"Name","value":"hide"},"value":{"kind":"Variable","name":{"kind":"Name","value":"hide"}}}]}]}}]};
+
+export function useHideTopicMutation() {
+  return Urql.useMutation<HideTopicMutation, HideTopicMutationVariables>(HideTopicDocument);
+};
 export const LikeCommentDocument: DocumentNode = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"likeComment"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"commentId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"likeComment"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"commentId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"commentId"}}}]}]}}]};
 
 export function useLikeCommentMutation() {
@@ -507,7 +532,7 @@ export const ProfileDocument: DocumentNode = {"kind":"Document","definitions":[{
 export function useProfileQuery(options: Omit<Urql.UseQueryArgs<ProfileQueryVariables>, 'query'> = {}) {
   return Urql.useQuery<ProfileQuery>({ query: ProfileDocument, ...options });
 };
-export const TopicDocument: DocumentNode = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"topic"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"topicById"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"html"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"likesCount"}},{"kind":"Field","name":{"kind":"Name","value":"isLiked"}},{"kind":"Field","name":{"kind":"Name","value":"author"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"username"}},{"kind":"Field","name":{"kind":"Name","value":"avatar"}}]}},{"kind":"Field","name":{"kind":"Name","value":"externalLink"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"url"}},{"kind":"Field","name":{"kind":"Name","value":"domain"}}]}}]}}]}}]};
+export const TopicDocument: DocumentNode = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"topic"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"topicById"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"html"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"likesCount"}},{"kind":"Field","name":{"kind":"Name","value":"isLiked"}},{"kind":"Field","name":{"kind":"Name","value":"hidden"}},{"kind":"Field","name":{"kind":"Name","value":"author"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"username"}},{"kind":"Field","name":{"kind":"Name","value":"avatar"}}]}},{"kind":"Field","name":{"kind":"Name","value":"externalLink"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"url"}},{"kind":"Field","name":{"kind":"Name","value":"domain"}}]}}]}}]}}]};
 
 export function useTopicQuery(options: Omit<Urql.UseQueryArgs<TopicQueryVariables>, 'query'> = {}) {
   return Urql.useQuery<TopicQuery>({ query: TopicDocument, ...options });

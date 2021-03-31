@@ -1,0 +1,3 @@
+mutation hideTopic($id: Int!, $hide: Boolean!) {
+  hideTopic(id: $id, hide: $hide)
+}

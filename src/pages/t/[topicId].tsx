@@ -6,6 +6,7 @@ import {
   TopicQueryVariables,
   useCommentsQuery,
   useCreateCommentMutation,
+  useHideTopicMutation,
 } from '@src/generated/graphql'
 import { timeago } from '@src/lib/date'
 import { AuthProvider } from '@src/hooks/useAuth'
@@ -72,6 +73,7 @@ const TopicPage: React.FC<PageProps> = ({ user, topicQuery }) => {
     },
     requestPolicy: 'network-only',
   })
+  const [, hideTopicMutation] = useHideTopicMutation()
   const commentEditorRef = React.useRef<HTMLTextAreaElement | null>(null)
   const [parentCommentId, setParentCommentId] = React.useState<number | null>(
     null,
@@ -107,6 +109,7 @@ const TopicPage: React.FC<PageProps> = ({ user, topicQuery }) => {
 
   const title = `${topic.title} - HAKKA!`
   const description = `登录 HAKKA! 以回复此主题`
+
   return (
     <AuthProvider value={user}>
       <Head>
@@ -140,13 +143,27 @@ const TopicPage: React.FC<PageProps> = ({ user, topicQuery }) => {
                         </span>
                       </div>
                       <div
-                        className="w-full text-xs text-fg-light flex items-center justify-between"
+                        className="w-full text-xs text-fg-light flex items-center space-x-2"
                         style={{ marginTop: '1px' }}
                       >
                         {canEdit && (
                           <Link href={`/edit-topic/${topic.id}`}>
                             <a className="">编辑</a>
                           </Link>
+                        )}
+                        {user?.isAdmin && (
+                          <button
+                            onClick={async () => {
+                              await hideTopicMutation({
+                                id: topic.id,
+                                hide: !topic.hidden,
+                              })
+                              // Refresh props
+                              router.replace(router.asPath)
+                            }}
+                          >
+                            {topic.hidden ? '显示' : '隐藏'}
+                          </button>
                         )}
                       </div>
                     </div>

@@ -1,5 +1,5 @@
 import { Context, GqlContext } from '@server/decorators/gql-context'
-import { isAdmin, requireAuth } from '@server/guards/require-auth'
+import { isAdmin, requireAdmin, requireAuth } from '@server/guards/require-auth'
 import { renderMarkdown } from '@server/lib/markdown'
 import { getRepos } from '@server/orm'
 import { ApolloError } from 'apollo-server-micro'
@@ -14,10 +14,12 @@ import {
   Mutation,
   FieldResolver,
   Root,
+  Arg,
 } from 'type-graphql'
 import { Comment } from './comment.resolver'
 import { getConnection } from '@server/orm'
 import { parseURL } from '@server/lib/utils'
+import { Not } from 'typeorm'
 
 @ArgsType()
 class TopicsArgs {
@@ -81,6 +83,9 @@ export class Topic {
     description: `If this topic content is a url, this field will be filled with the domain name`,
   })
   domain?: string
+
+  @Field({ nullable: true })
+  hidden?: boolean
 }
 
 @ObjectType()
@@ -149,15 +154,17 @@ export class TopicResolver {
   async topics(@GqlContext() ctx: Context, @Args() args: TopicsArgs) {
     const skip = (args.page - 1) * args.take
     const connection = await getConnection()
+
     const topics = await connection.query(
       `
     select "topic".* from "topic" "topic"
-    left join "comment" "lastComment"
-      on "lastComment"."id" = "topic"."lastCommentId"
+      left join "comment" "lastComment"
+        on "lastComment"."id" = "topic"."lastCommentId"
+        where "topic"."hidden" is not true
     order by
       case when "lastComment" is null then "topic"."createdAt" else "lastComment"."createdAt" end DESC
     limit $1
-    offset $2
+    offset $2;
     `,
       [args.take + 1, skip],
     )
@@ -323,5 +330,19 @@ export class TopicResolver {
       liked = true
     }
     return liked
+  }
+
+  @Mutation((returns) => Boolean)
+  async hideTopic(
+    @GqlContext() ctx: Context,
+    @Arg('id', () => Int) id: number,
+    @Arg('hide') hide: boolean,
+  ) {
+    const user = requireAuth(ctx)
+    requireAdmin(user)
+
+    const repos = await getRepos()
+    await repos.topic.update({ id }, { hidden: hide })
+    return true
   }
 }

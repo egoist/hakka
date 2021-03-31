@@ -51,4 +51,10 @@ export class Topic {
   @OneToOne((type) => Comment, { nullable: true, onDelete: 'SET NULL' })
   @JoinColumn()
   lastComment?: Comment
+
+  /**
+   * Hide the topic from being listed (but still exists and visible)
+   */
+  @Column({ nullable: true })
+  hidden?: boolean
 }

@@ -6,6 +6,7 @@ query topic($id: Int!) {
     createdAt
     likesCount
     isLiked
+    hidden
     author {
       id
       username
