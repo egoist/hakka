@@ -2,6 +2,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  Index,
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm'
@@ -31,5 +32,6 @@ export class Token {
   user: User
 
   @Column()
+  @Index()
   userId: number
 }

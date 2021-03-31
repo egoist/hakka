@@ -2,6 +2,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  Index,
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm'
@@ -13,12 +14,14 @@ export class Notification {
   id: number
 
   @CreateDateColumn({ type: 'timestamp with time zone' })
+  @Index()
   createdAt: Date
 
   @ManyToOne((type) => User, (user) => user.notifications)
   user: User
 
   @Column()
+  @Index()
   userId: number
 
   @Column({ nullable: true })

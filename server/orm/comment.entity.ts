@@ -2,6 +2,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  Index,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
@@ -17,6 +18,7 @@ export class Comment {
   id: number
 
   @CreateDateColumn({ type: 'timestamp with time zone' })
+  @Index()
   createdAt: Date
 
   @UpdateDateColumn({ type: 'timestamp with time zone' })
@@ -29,12 +31,14 @@ export class Comment {
   topic: Topic
 
   @Column()
+  @Index()
   topicId: number
 
   @ManyToOne((type) => User, (user) => user.comments)
   author: User
 
   @Column()
+  @Index()
   authorId: number
 
   @ManyToOne((type) => Comment, (comment) => comment.children, {
@@ -43,6 +47,7 @@ export class Comment {
   parent?: Comment
 
   @Column({ nullable: true })
+  @Index()
   parentId?: number
 
   @OneToMany((type) => Comment, (comment) => comment.parent)

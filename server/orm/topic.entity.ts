@@ -8,6 +8,7 @@ import {
   OneToMany,
   OneToOne,
   JoinColumn,
+  Index,
 } from 'typeorm'
 import { User } from './user.entity'
 import { Comment } from './comment.entity'
@@ -19,9 +20,11 @@ export class Topic {
   id: number
 
   @CreateDateColumn({ type: 'timestamp with time zone' })
+  @Index()
   createdAt: Date
 
   @UpdateDateColumn({ type: 'timestamp with time zone' })
+  @Index()
   updatedAt: Date
 
   @Column()
@@ -37,6 +40,7 @@ export class Topic {
   author: User
 
   @Column()
+  @Index()
   authorId: number
 
   @OneToMany((type) => Comment, (comment) => comment.topic)
