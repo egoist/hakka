@@ -15,7 +15,7 @@ import Head from 'next/head'
 import { Main } from '@src/components/Main'
 
 type PageProps = {
-  user: AuthUser | null
+  user: AuthUser
 }
 
 export const getServerSideProps: GetServerSideProps<PageProps> = async (
@@ -90,6 +90,12 @@ const NewTopicPage: React.FC<PageProps> = ({ user }) => {
     }
   }, [topicQuery.fetching])
 
+  // Registered for 10 minutes
+  const isNewUser = React.useMemo(
+    () => (Date.now() - user.createdAt) / 1000 < 10 * 60,
+    [user.createdAt],
+  )
+
   const title = topicId ? `编辑主题` : `创建主题`
   return (
     <AuthProvider value={user}>
@@ -152,10 +158,19 @@ const NewTopicPage: React.FC<PageProps> = ({ user }) => {
                 )}
 
                 <div className="mt-5">
-                  <Button type="submit" isLoading={form.isSubmitting}>
+                  <Button
+                    type="submit"
+                    isLoading={form.isSubmitting}
+                    disabled={isNewUser}
+                  >
                     {topicId ? `更新主题` : `发表主题`}
                   </Button>
                 </div>
+                {isNewUser && (
+                  <div className="mt-5 border-t border-border pt-5 text-sm text-xs text-fg-light">
+                    由于你是新用户，在注册 10 分钟后才能发布第一个主题。
+                  </div>
+                )}
               </div>
             </form>
           </div>

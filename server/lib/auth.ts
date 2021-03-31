@@ -33,6 +33,7 @@ export type AuthUser = {
   username: string
   avatar?: string
   isAdmin: boolean
+  createdAt: number
 }
 
 export const getServerSession = async (
@@ -60,6 +61,7 @@ export const getServerSession = async (
           username: user.username,
           avatar: user.avatar,
           isAdmin: isAdmin({ id: user.id }),
+          createdAt: user.createdAt.getTime(),
         }
       : null,
   }
