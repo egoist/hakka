@@ -1,6 +1,5 @@
 import { Context, GqlContext } from '@server/decorators/gql-context'
 import { requireAuth } from '@server/guards/require-auth'
-import { getRepos } from '@server/orm'
 import {
   createUnionType,
   Field,
@@ -13,8 +12,8 @@ import {
   Root,
 } from 'type-graphql'
 import { GraphQLJSONObject } from 'graphql-type-json'
-import { IsNull } from 'typeorm'
 import { Comment } from './comment.resolver'
+import { prisma } from '@server/lib/prisma'
 
 @ObjectType()
 class Notification {
@@ -67,15 +66,13 @@ export class NotificationResolver {
   @Query((returns) => [Notification])
   async notifications(@GqlContext() ctx: Context) {
     const user = requireAuth(ctx)
-    const repos = await getRepos()
-    const notifications = await repos.notification.find({
+    const notifications = await prisma.notification.findMany({
       where: {
         userId: user.id,
-        // isRead: IsNull(),
       },
       take: 100,
-      order: {
-        createdAt: 'DESC',
+      orderBy: {
+        createdAt: 'desc',
       },
     })
     return notifications
@@ -84,11 +81,10 @@ export class NotificationResolver {
   @Query((returns) => Int)
   async notificationsCount(@GqlContext() ctx: Context) {
     const user = requireAuth(ctx)
-    const repos = await getRepos()
-    const count = await repos.notification.count({
+    const count = await prisma.notification.count({
       where: {
         userId: user.id,
-        isRead: IsNull(),
+        isRead: null,
       },
     })
     return count
@@ -96,10 +92,9 @@ export class NotificationResolver {
 
   @FieldResolver((returns) => ResolvedDataUnion)
   async resolvedData(@Root() notification: Notification) {
-    const repos = await getRepos()
     const { data } = notification
     if (data.type === 'topic-comment') {
-      const comment = await repos.comment.findOne({
+      const comment = await prisma.comment.findUnique({
         where: {
           id: data.commentId,
         },
@@ -107,7 +102,7 @@ export class NotificationResolver {
       return { type: data.type, comment }
     }
     if (data.type === 'comment-reply') {
-      const replyComment = await repos.comment.findOne({
+      const replyComment = await prisma.comment.findUnique({
         where: {
           id: data.replyCommentId,
         },
@@ -119,15 +114,14 @@ export class NotificationResolver {
   @Mutation((returns) => Boolean)
   async markAllNotificationsAsRead(@GqlContext() ctx: Context) {
     const user = requireAuth(ctx)
-    const repos = await getRepos()
-    await repos.notification.update(
-      {
+    await prisma.notification.updateMany({
+      where: {
         userId: user.id,
       },
-      {
+      data: {
         isRead: true,
       },
-    )
+    })
     return true
   }
 }

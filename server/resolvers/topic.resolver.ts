@@ -1,7 +1,6 @@
 import { Context, GqlContext } from '@server/decorators/gql-context'
 import { isAdmin, requireAdmin, requireAuth } from '@server/guards/require-auth'
 import { renderMarkdown } from '@server/lib/markdown'
-import { getRepos } from '@server/orm'
 import { ApolloError } from 'apollo-server-micro'
 import {
   Args,
@@ -17,9 +16,7 @@ import {
   Arg,
 } from 'type-graphql'
 import { Comment } from './comment.resolver'
-import { getConnection } from '@server/orm'
-import { parseURL } from '@server/lib/utils'
-import { Not } from 'typeorm'
+import { prisma } from '@server/lib/prisma'
 
 @ArgsType()
 class TopicsArgs {
@@ -153,23 +150,23 @@ export class TopicResolver {
   @Query((returns) => TopicsConnection)
   async topics(@GqlContext() ctx: Context, @Args() args: TopicsArgs) {
     const skip = (args.page - 1) * args.take
-    const connection = await getConnection()
 
-    const topics = await connection.query(
-      `
-    select "topic".* from "topic" "topic"
-      left join "comment" "lastComment"
+    const topics = await prisma.$queryRaw`
+    select "topic".* from "topics" "topic"
+      left join "comments" "lastComment"
         on "lastComment"."id" = "topic"."lastCommentId"
         where "topic"."hidden" is not true
     order by
       case when "lastComment" is null then "topic"."createdAt" else "lastComment"."createdAt" end DESC
-    limit $1
-    offset $2;
-    `,
-      [args.take + 1, skip],
-    )
+    limit ${args.take}
+    offset ${skip};
+    `
     return {
-      items: topics.slice(0, args.take),
+      items: topics.slice(0, args.take).map((topic: any) => ({
+        ...topic,
+        createdAt: new Date(topic.createdAt),
+        updatedAt: new Date(topic.updatedAt),
+      })),
       hasNext: topics.length > args.take,
       hasPrev: args.page !== 1,
     }
@@ -177,8 +174,7 @@ export class TopicResolver {
 
   @Query((returns) => Topic)
   async topicById(@Args() args: TopicByIdArgs) {
-    const repos = await getRepos()
-    const topic = await repos.topic.findOne({
+    const topic = await prisma.topic.findUnique({
       where: {
         id: args.id,
       },
@@ -188,8 +184,7 @@ export class TopicResolver {
 
   @FieldResolver((returns) => TopicAuthor)
   async author(@Root() topic: Topic) {
-    const repos = await getRepos()
-    const author = await repos.user.findOne({
+    const author = await prisma.user.findUnique({
       where: {
         id: topic.authorId,
       },
@@ -205,8 +200,7 @@ export class TopicResolver {
 
   @FieldResolver((returns) => Int)
   async commentsCount(@Root() topic: Topic) {
-    const repos = await getRepos()
-    const count = await repos.comment.count({
+    const count = await prisma.comment.count({
       where: {
         topicId: topic.id,
       },
@@ -216,8 +210,7 @@ export class TopicResolver {
 
   @FieldResolver((returns) => Int)
   async likesCount(@Root() topic: Topic) {
-    const repos = await getRepos()
-    const count = await repos.userTopicLike.count({
+    const count = await prisma.userTopicLike.count({
       where: {
         topicId: topic.id,
       },
@@ -231,21 +224,21 @@ export class TopicResolver {
       return false
     }
 
-    const repos = await getRepos()
-    const record = await repos.userTopicLike.findOne({
+    const record = await prisma.userTopicLike.findFirst({
       where: {
         userId: ctx.user.id,
         topicId: topic.id,
       },
-      select: ['id'],
     })
     return Boolean(record)
   }
 
   @FieldResolver((returns) => Comment, { nullable: true })
   async lastComment(@Root() topic: Topic) {
-    const repos = await getRepos()
-    return repos.comment.findOne({ id: topic.lastCommentId })
+    return (
+      topic.lastCommentId &&
+      prisma.comment.findUnique({ where: { id: topic.lastCommentId } })
+    )
   }
 
   @FieldResolver((returns) => TopicExternalLink, { nullable: true })
@@ -262,16 +255,15 @@ export class TopicResolver {
   @Mutation((returns) => Topic)
   async createTopic(@GqlContext() ctx: Context, @Args() args: CreateTopicArgs) {
     const user = requireAuth(ctx)
-    const repos = await getRepos()
 
-    const topic = repos.topic.create({
-      authorId: user.id,
-      title: args.title,
-      content: args.content,
-      url: args.url,
+    const topic = await prisma.topic.create({
+      data: {
+        authorId: user.id,
+        title: args.title,
+        content: args.content,
+        url: args.url,
+      },
     })
-
-    await repos.topic.save(topic)
 
     return topic
   }
@@ -279,8 +271,7 @@ export class TopicResolver {
   @Mutation((returns) => Topic)
   async updateTopic(@GqlContext() ctx: Context, @Args() args: UpdateTopicArgs) {
     const user = requireAuth(ctx)
-    const repos = await getRepos()
-    const topic = await repos.topic.findOne({
+    const topic = await prisma.topic.findUnique({
       where: {
         id: args.id,
       },
@@ -294,13 +285,15 @@ export class TopicResolver {
       throw new ApolloError(`没有访问权限`)
     }
 
-    Object.assign(topic, {
-      title: args.title,
-      content: args.content,
-      nodeId: args.nodeId,
+    const result = await prisma.topic.update({
+      where: {
+        id: topic.id,
+      },
+      data: {
+        title: args.title,
+        content: args.content,
+      },
     })
-
-    const result = await repos.topic.save(topic)
 
     return result
   }
@@ -308,25 +301,32 @@ export class TopicResolver {
   @Mutation((returns) => Boolean)
   async likeTopic(@GqlContext() ctx: Context, @Args() args: LikeTopicArgs) {
     const user = requireAuth(ctx)
-    const repos = await getRepos()
-    const topic = await repos.topic.findOneOrFail({
+    const topic = await prisma.topic.findUnique({
       where: {
         id: args.topicId,
       },
     })
-    let userTopicLike = await repos.userTopicLike.findOne({
-      topicId: topic.id,
-      userId: user.id,
+    if (!topic) throw new ApolloError(`topic was not found`)
+    let userTopicLike = await prisma.userTopicLike.findFirst({
+      where: {
+        topicId: topic.id,
+        userId: user.id,
+      },
     })
     let liked = false
     if (userTopicLike) {
-      await repos.userTopicLike.remove(userTopicLike)
-    } else {
-      userTopicLike = repos.userTopicLike.create({
-        topicId: topic.id,
-        userId: user.id,
+      await prisma.userTopicLike.delete({
+        where: {
+          id: userTopicLike.id,
+        },
       })
-      await repos.userTopicLike.save(userTopicLike)
+    } else {
+      userTopicLike = await prisma.userTopicLike.create({
+        data: {
+          topicId: topic.id,
+          userId: user.id,
+        },
+      })
       liked = true
     }
     return liked
@@ -341,8 +341,10 @@ export class TopicResolver {
     const user = requireAuth(ctx)
     requireAdmin(user)
 
-    const repos = await getRepos()
-    await repos.topic.update({ id }, { hidden: hide })
+    await prisma.topic.update({
+      where: { id },
+      data: { hidden: hide },
+    })
     return true
   }
 }

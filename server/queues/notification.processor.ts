@@ -1,15 +1,16 @@
+import { prisma } from '@server/lib/prisma'
 import { Job } from 'bull'
-import { getRepos } from '@server/orm'
 import type { NotificationJobData } from './notification.queue'
 
 export default async (job: Job<NotificationJobData>) => {
-  const repos = await getRepos()
-
-  const comment = await repos.comment.findOne({
+  const comment = await prisma.comment.findUnique({
     where: {
       id: job.data.commentId,
     },
-    relations: ['topic', 'parent'],
+    include: {
+      topic: true,
+      parent: true,
+    },
   })
 
   if (!comment) return
@@ -23,28 +24,30 @@ export default async (job: Job<NotificationJobData>) => {
     topic.authorId !== comment.authorId &&
     (!parentComment || parentComment.authorId !== topic.authorId)
   ) {
-    const topicCommentNotification = repos.notification.create({
-      userId: topic.authorId,
+    await prisma.notification.create({
       data: {
-        type: 'topic-comment',
-        topicId: topic.id,
-        commentId: comment.id,
+        userId: topic.authorId,
+        data: {
+          type: 'topic-comment',
+          topicId: topic.id,
+          commentId: comment.id,
+        },
       },
     })
-    await repos.notification.save(topicCommentNotification)
   }
 
   // Comment reply notification, insert if the comment author is not the parent comment author
   if (parentComment && parentComment.authorId !== comment.authorId) {
-    const commentReplyNotification = repos.notification.create({
-      userId: parentComment.authorId,
+    await prisma.notification.create({
       data: {
-        type: 'comment-reply',
-        topicId: topic.id,
-        commentId: parentComment.id,
-        replyCommentId: comment.id,
+        userId: parentComment.authorId,
+        data: {
+          type: 'comment-reply',
+          topicId: topic.id,
+          commentId: parentComment.id,
+          replyCommentId: comment.id,
+        },
       },
     })
-    await repos.notification.save(commentReplyNotification)
   }
 }

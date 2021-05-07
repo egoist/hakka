@@ -7,12 +7,10 @@
   "scripts": {
     "start": "next start --port $PORT",
     "dev": "next",
-    "build": "npm run build:server && next build",
-    "dev:server": "ttsc -p server --watch",
-    "build:server": "ttsc -p server",
-    "g:gql": "graphql-codegen --config graphql-codegen.yml",
-    "migrate:save": "typeorm migration:generate -n",
-    "migrate:deploy": "typeorm migration:run"
+    "build": "next build",
+    "gql-generate": "graphql-codegen --config graphql-codegen.yml",
+    "db-push": "prisma db push",
+    "migrate-deploy": "prisma migrate deploy"
   },
   "husky": {
     "hooks": {
@@ -28,6 +26,7 @@
     "@badrap/bar-of-progress": "^0.1.2",
     "@hapi/iron": "^6.0.0",
     "@headlessui/react": "^0.3.1",
+    "@prisma/client": "2.22.1",
     "@urql/exchange-graphcache": "^4.0.0",
     "apollo-server-micro": "^2.22.1",
     "body-parser": "1.19.0",
@@ -57,7 +56,6 @@
     "react-select": "^4.3.0",
     "reflect-metadata": "0.1.13",
     "type-graphql": "1.1.1",
-    "typeorm": "0.2.31",
     "urql": "^2.0.1",
     "zustand": "^3.3.3"
   },
@@ -83,10 +81,9 @@
     "husky": "4.3.6",
     "lint-staged": "10.5.3",
     "prettier": "2.2.1",
-    "ts-loader": "^8.0.12",
-    "ttypescript": "^1.5.12",
+    "prisma": "2.22.1",
+    "ts-loader": "9.0.0",
     "typescript": "^4.2.3",
-    "typescript-transform-paths": "^2.2.3",
-    "windicss-webpack-plugin": "^0.2.9"
+    "windicss-webpack-plugin": "^0.5.1"
   }
 }

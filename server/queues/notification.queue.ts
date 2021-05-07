@@ -1,5 +1,5 @@
-import path from 'path'
 import Queue from 'bull'
+import notificationProcessor from './notification.processor'
 
 export type NotificationJobData = {
   commentId: number
@@ -15,4 +15,4 @@ export const notificationQueue = new Queue<NotificationJobData>(
   },
 )
 
-notificationQueue.process(path.join(__dirname, 'notification.processor.js'))
+notificationQueue.process(notificationProcessor)

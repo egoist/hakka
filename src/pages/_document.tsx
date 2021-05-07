@@ -18,11 +18,13 @@ class MyDocument extends Document {
         <body>
           <Main />
           <NextScript />
-          <script
-            defer
-            src="https://static.cloudflareinsights.com/beacon.min.js"
-            data-cf-beacon='{"token": "4514c386de584b889d8b465387e46079"}'
-          ></script>
+          {process.env.NODE_ENV === 'production' && (
+            <script
+              defer
+              src="https://static.cloudflareinsights.com/beacon.min.js"
+              data-cf-beacon='{"token": "4514c386de584b889d8b465387e46079"}'
+            ></script>
+          )}
         </body>
       </Html>
     )

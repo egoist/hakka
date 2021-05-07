@@ -1,4 +1,4 @@
-import { getRepos } from '@server/orm'
+import { prisma } from '@server/lib/prisma'
 import {
   Resolver,
   Query,
@@ -8,8 +8,6 @@ import {
   ArgsType,
   Args,
 } from 'type-graphql'
-import { Context, GqlContext } from '../decorators/gql-context'
-import { requireAuth } from '../guards/require-auth'
 
 @ArgsType()
 class ProfileArgs {
@@ -36,8 +34,9 @@ class Profile {
 export class UserResolver {
   @Query((returns) => Profile)
   async profile(@Args() args: ProfileArgs) {
-    const repos = await getRepos()
-    const user = repos.user.findOne({ where: { username: args.username } })
+    const user = await prisma.user.findUnique({
+      where: { username: args.username },
+    })
     return user
   }
 }

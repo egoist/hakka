@@ -1,6 +1,5 @@
 import { Context, GqlContext } from '@server/decorators/gql-context'
 import { requireAuth } from '@server/guards/require-auth'
-import { getRepos } from '@server/orm'
 import {
   Args,
   ArgsType,
@@ -17,6 +16,8 @@ import { SORT_ORDER, UserPublicInfo } from './resolver.types'
 import { renderMarkdown } from '@server/lib/markdown'
 import { Topic } from './topic.resolver'
 import { notificationQueue } from '@server/queues/notification.queue'
+import { prisma } from '@server/lib/prisma'
+import { ApolloError } from 'apollo-server-errors'
 
 @ArgsType()
 class CreateCommentArgs {
@@ -86,8 +87,8 @@ class CommentsArgs {
   })
   page: number
 
-  @Field((type) => SORT_ORDER, { nullable: true })
-  order?: 'DESC' | 'ASC'
+  @Field((type) => SORT_ORDER, { defaultValue: 'asc' })
+  order: 'desc' | 'asc'
 }
 
 @ArgsType()
@@ -100,17 +101,21 @@ class LikeCommentArgs {
 export class CommentResolver {
   @Query((returns) => CommentsConnection)
   async comments(@Args() args: CommentsArgs) {
-    const repos = await getRepos()
     const skip = (args.page - 1) * args.take
 
-    const [comments, count] = await repos.comment.findAndCount({
+    const comments = await prisma.comment.findMany({
       where: {
         topicId: args.topicId,
       },
       take: args.take + 1,
       skip,
-      order: {
+      orderBy: {
         createdAt: args.order,
+      },
+    })
+    const count = await prisma.comment.count({
+      where: {
+        topicId: args.topicId,
       },
     })
 
@@ -128,23 +133,41 @@ export class CommentResolver {
     @Args() args: CreateCommentArgs,
   ) {
     const user = requireAuth(ctx)
-    const repos = await getRepos()
-    const comment = repos.comment.create({
-      topicId: args.topicId,
-      content: args.content,
-      authorId: user.id,
-      parentId: args.parentId,
+    const comment = await prisma.comment.create({
+      data: {
+        topic: {
+          connect: {
+            id: args.topicId,
+          },
+        },
+        content: args.content,
+        author: {
+          connect: {
+            id: user.id,
+          },
+        },
+        parent: args.parentId
+          ? {
+              connect: {
+                id: args.parentId,
+              },
+            }
+          : undefined,
+      },
     })
-    await repos.comment.save(comment)
 
-    await repos.topic.update(
-      {
+    await prisma.topic.update({
+      where: {
         id: args.topicId,
       },
-      {
-        lastCommentId: comment.id,
+      data: {
+        lastComment: {
+          connect: {
+            id: comment.id,
+          },
+        },
       },
-    )
+    })
 
     // Add notification
     notificationQueue.add({ commentId: comment.id })
@@ -160,8 +183,7 @@ export class CommentResolver {
 
   @FieldResolver((returns) => UserPublicInfo)
   async author(@Root() comment: Comment) {
-    const repos = await getRepos()
-    const author = await repos.user.findOne({
+    const author = await prisma.user.findUnique({
       where: {
         id: comment.authorId,
       },
@@ -173,10 +195,9 @@ export class CommentResolver {
     nullable: true,
   })
   async parent(@Root() comment: Comment) {
-    const repos = await getRepos()
     const parentComment =
       comment.parentId &&
-      (await repos.comment.findOne({
+      (await prisma.comment.findUnique({
         where: {
           id: comment.parentId,
         },
@@ -186,8 +207,7 @@ export class CommentResolver {
 
   @FieldResolver((returns) => Topic)
   async topic(@Root() comment: Comment) {
-    const repos = await getRepos()
-    const topic = await repos.topic.findOne({
+    const topic = await prisma.topic.findUnique({
       where: {
         id: comment.topicId,
       },
@@ -197,8 +217,7 @@ export class CommentResolver {
 
   @FieldResolver((returns) => Int)
   async likesCount(@Root() comment: Comment) {
-    const repos = await getRepos()
-    const count = await repos.userCommentLike.count({
+    const count = await prisma.userCommentLike.count({
       where: {
         commentId: comment.id,
       },
@@ -212,13 +231,11 @@ export class CommentResolver {
       return false
     }
 
-    const repos = await getRepos()
-    const record = await repos.userCommentLike.findOne({
+    const record = await prisma.userCommentLike.findFirst({
       where: {
         userId: ctx.user.id,
         commentId: comment.id,
       },
-      select: ['id'],
     })
     return Boolean(record)
   }
@@ -226,25 +243,32 @@ export class CommentResolver {
   @Mutation((returns) => Boolean)
   async likeComment(@GqlContext() ctx: Context, @Args() args: LikeCommentArgs) {
     const user = requireAuth(ctx)
-    const repos = await getRepos()
-    const comment = await repos.comment.findOneOrFail({
+    const comment = await prisma.comment.findUnique({
       where: {
         id: args.commentId,
       },
     })
-    let userCommentLike = await repos.userCommentLike.findOne({
-      commentId: comment.id,
-      userId: user.id,
+    if (!comment) throw new ApolloError(`comment was not found`)
+    let userCommentLike = await prisma.userCommentLike.findFirst({
+      where: {
+        commentId: comment.id,
+        userId: user.id,
+      },
     })
     let liked = false
     if (userCommentLike) {
-      await repos.userCommentLike.remove(userCommentLike)
-    } else {
-      userCommentLike = repos.userCommentLike.create({
-        commentId: comment.id,
-        userId: user.id,
+      await prisma.userCommentLike.delete({
+        where: {
+          id: userCommentLike.id,
+        },
       })
-      await repos.userCommentLike.save(userCommentLike)
+    } else {
+      userCommentLike = await prisma.userCommentLike.create({
+        data: {
+          commentId: comment.id,
+          userId: user.id,
+        },
+      })
       liked = true
     }
     return liked

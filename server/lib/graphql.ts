@@ -1,3 +1,4 @@
+import 'reflect-metadata'
 import { buildSchema } from 'type-graphql'
 import { AuthResolver } from '@server/resolvers/auth.resolver'
 import { CommentResolver } from '@server/resolvers/comment.resolver'

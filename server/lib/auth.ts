@@ -2,9 +2,9 @@ import { IncomingMessage } from 'http'
 import cookie from 'cookie'
 import { NextApiRequest } from 'next'
 import Iron from '@hapi/iron'
-import { getRepos } from '@server/orm'
 import { AUTH_COOKIE_NAME } from './constants'
 import { isAdmin } from '@server/guards/require-auth'
+import { prisma } from './prisma'
 
 export type CookieUserPayload = {
   userId: number
@@ -31,7 +31,7 @@ export async function parseSecureToken(
 export type AuthUser = {
   id: number
   username: string
-  avatar?: string
+  avatar?: string | null
   isAdmin: boolean
   createdAt: number
 }
@@ -47,8 +47,7 @@ export const getServerSession = async (
     return { user: null }
   }
 
-  const repos = await getRepos()
-  const user = await repos.user.findOne({
+  const user = await prisma.user.findUnique({
     where: {
       id: cookieUserPayload.userId,
     },

@@ -2,10 +2,10 @@ import { NextApiRequest, NextApiResponse } from 'next'
 import passport, { Profile } from 'passport'
 import { Strategy as GitHubStrategy } from 'passport-github'
 import { nanoid } from 'nanoid'
-import { getRepos } from '@server/orm'
 import { serialize } from 'cookie'
 import { createSecureToken } from './auth'
 import { AUTH_COOKIE_NAME } from './constants'
+import { prisma } from './prisma'
 
 // Not really used
 passport.serializeUser<any, number>((user, done) => {
@@ -50,52 +50,51 @@ async function getUserByProviderProfile(profile: Profile, provider: 'github') {
 
   const providerKey = `${provider}UserId`
 
-  const repos = await getRepos()
-
   // Find one by provider user id
-  let existing = await repos.user.findOne({
+  let existing = await prisma.user.findUnique({
     where: {
       [providerKey]: profile.id,
     },
   })
   // Otherwise find one with the same email and link them
   if (!existing) {
-    existing = await repos.user.findOne({
+    existing = await prisma.user.findUnique({
       where: {
         email,
       },
     })
     if (existing) {
-      await repos.user.update(
-        {
+      await prisma.user.update({
+        where: {
           id: existing.id,
         },
-        {
+        data: {
           [providerKey]: profile.id,
         },
-      )
+      })
     }
   }
 
   if (!existing) {
-    existing = repos.user.create({
-      email,
-      username: profile.username || `user_${nanoid(5)}`,
-      [providerKey]: profile.id,
-      avatar,
+    existing = await prisma.user.create({
+      data: {
+        email,
+        username: profile.username || `user_${nanoid(5)}`,
+        [providerKey]: profile.id,
+        avatar,
+      },
     })
-    await repos.user.save(existing)
   }
 
   if (avatar && existing.avatar !== avatar) {
-    await repos.user.update(
-      {
+    await prisma.user.update({
+      where: {
         id: existing.id,
       },
-      {
+      data: {
         avatar,
       },
-    )
+    })
   }
 
   return existing

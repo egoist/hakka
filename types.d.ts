@@ -6,6 +6,10 @@ declare namespace NodeJS {
     GITHUB_CLIENT_ID?: string
     GITHUB_CLIENT_SECRET?: string
   }
+
+  interface Global {
+    _singletons: Record<string, any>
+  }
 }
 
 type TODO = any
