@@ -28,10 +28,10 @@ export const Header: React.FC<{}> = () => {
 
   return (
     <>
-      <header className="fixed top-0 left-0 right-0 h-12 text-white px-6 border-b border-orange-500 bg-body-bg z-99">
-        <div className="h-full flex items-center justify-between">
+      <header className="fixed top-0 left-0 right-0 h-15 border-b border-border bg-body-bg z-99">
+        <div className="h-full max-w-4xl mx-auto flex items-center justify-between px-3 md:px-6">
           <div className="flex items-center h-full">
-            <h1 className="text-lg font-medium">
+            <h1 className="text-2xl font-medium font-serif text-orange-500">
               <Link href="/">
                 <a>HAKKA!</a>
               </Link>

@@ -168,7 +168,7 @@ const TopicPage: React.FC<PageProps> = ({ user, topicQuery }) => {
                       </div>
                     </div>
                   </div>
-                  <h1 className="text-xl font-medium">
+                  <h1 className="text-xl font-medium text-gray-200">
                     {topic.externalLink ? (
                       <span>
                         <a

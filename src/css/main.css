@@ -1,8 +1,8 @@
 :root {
-  --body-bg: #2b2b2b;
+  --body-bg: rgb(24, 26, 27);
   --body-bg-lighter: rgb(77, 77, 77);
   --main-bg: #f6f6f6;
-  --fg: #eee;
+  --fg: rgb(200, 195, 188);
   --fg-light: #aaa;
   --border-color: rgb(255 255 255 / 10%);
   --panel-header-height: 50px;

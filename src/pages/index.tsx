@@ -11,6 +11,7 @@ import Link from 'next/link'
 import { useTopicsQuery } from '@src/generated/graphql'
 import { Main } from '@src/components/Main'
 import { useRouter } from 'next/router'
+import { UniLink } from '@src/components/UniLink'
 
 type PageProps = {
   user: AuthUser | null
@@ -61,20 +62,17 @@ const HomePage: React.FC<PageProps> = ({ user }) => {
                     <div key={topic.id}>
                       <span className={clsx(`flex justify-between`)}>
                         <div>
-                          <h2 className="text-lg leading-snug">
-                            {topic.externalLink ? (
-                              <a
-                                href={topic.externalLink.url}
-                                target="_blank"
-                                rel="noopener nofollow"
-                              >
-                                {topic.title}
-                              </a>
-                            ) : (
-                              <Link href={`/t/${topic.id}`}>
-                                <a>{topic.title}</a>
-                              </Link>
-                            )}
+                          <h2 className="text-lg font-medium leading-snug">
+                            <UniLink
+                              to={
+                                topic.externalLink
+                                  ? topic.externalLink.url
+                                  : `/t/${topic.id}`
+                              }
+                              className="text-gray-200 hover:text-orange-500 hover:underline"
+                            >
+                              {topic.title}
+                            </UniLink>
                             {topic.externalLink && (
                               <span className="text-sm text-fg-light ml-2">
                                 ({topic.externalLink.domain})
