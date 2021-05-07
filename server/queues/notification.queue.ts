@@ -8,10 +8,7 @@ export type NotificationJobData = {
 export const notificationQueue = new Queue<NotificationJobData>(
   `notification`,
   {
-    redis: {
-      host: '127.0.0.1',
-      port: 6379,
-    },
+    redis: process.env.REDIS_URL,
   },
 )
 
