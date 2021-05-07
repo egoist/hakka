@@ -1,5 +1,7 @@
 import Document, { Html, Head, Main, NextScript } from 'next/document'
 
+const MAINTAINANCE_MODE = process.env.MAINTAINANCE_MODE
+
 class MyDocument extends Document {
   static async getInitialProps(ctx: any) {
     const initialProps = await Document.getInitialProps(ctx)
@@ -7,6 +9,9 @@ class MyDocument extends Document {
   }
 
   render() {
+    if (MAINTAINANCE_MODE) {
+      return <div>网站升级维护中，稍等一会...</div>
+    }
     return (
       <Html>
         <Head />
