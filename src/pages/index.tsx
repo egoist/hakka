@@ -46,6 +46,7 @@ const HomePage: React.FC<PageProps> = ({ user }) => {
     <AuthProvider value={user}>
       <Head>
         <title>HAKKA!</title>
+        <link rel="alternate" type="application/json" href="/feed.json" />
       </Head>
       <Main
         render={() => (

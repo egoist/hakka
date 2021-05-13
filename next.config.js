@@ -9,6 +9,10 @@ module.exports = {
         source: '/admin/queues/:slug*',
         destination: '/api/admin/queues',
       },
+      {
+        source: '/feed.json',
+        destination: '/api/feed',
+      },
     ]
   },
 

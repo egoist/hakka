@@ -38,6 +38,7 @@
     "cors": "^2.8.5",
     "dayjs": "^1.10.4",
     "dotenv": "^8.2.0",
+    "feed": "^4.2.2",
     "formik": "^2.2.6",
     "graphql": "^15.5.0",
     "graphql-type-json": "^0.3.2",
