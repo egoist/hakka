@@ -116,6 +116,7 @@ export async function handleSuccessfulLogin(
     httpOnly: true,
     sameSite: 'lax',
     maxAge,
+    domain: process.env.NODE_ENV === 'production' ? '.hakka.dev' : undefined,
   })
   res.setHeader('Set-Cookie', [authCookie])
   res.redirect('/')
