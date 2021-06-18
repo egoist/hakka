@@ -1246,6 +1246,11 @@
     "@types/keygrip" "*"
     "@types/node" "*"
 
+"@types/cors@^2.8.10":
+  version "2.8.10"
+  resolved "https://registry.yarnpkg.com/@types/cors/-/cors-2.8.10.tgz#61cc8469849e5bcdd0c7044122265c39cec10cf4"
+  integrity sha512-C7srjHiVG3Ey1nR6d511dtDkCEjxuN9W1HWAEjGq8kpcwmNM6JJkpC0xvabM7BXTG2wDq8Eu33iH9aQKa7IvLQ==
+
 "@types/express-serve-static-core@*", "@types/express-serve-static-core@^4.17.14":
   version "4.17.17"
   resolved "https://registry.npmjs.org/@types/express-serve-static-core/-/express-serve-static-core-4.17.17.tgz#6ba02465165b6c9c3d8db3a28def6b16fc9b70f5"

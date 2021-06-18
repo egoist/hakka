@@ -3,6 +3,8 @@ import { ApolloServer } from 'apollo-server-micro'
 import { NextApiHandler } from 'next'
 import { getSchema } from '@server/lib/graphql'
 import { getServerSession } from '@server/lib/auth'
+import connect from 'next-connect'
+import cors from 'cors'
 
 export const config = {
   api: {
@@ -47,4 +49,6 @@ const apiHandler: NextApiHandler = async (req, res) => {
   return handler(req, res)
 }
 
-export default apiHandler
+export default connect()
+  .use(cors())
+  .use(apiHandler as any)
