@@ -29,6 +29,7 @@ const apiHandler: NextApiHandler = async (req, res) => {
         'request.credentials': 'include',
       },
     },
+    introspection: true,
     async context({ req, res }) {
       const { user } = await getServerSession(req)
       return {
