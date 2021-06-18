@@ -13,7 +13,10 @@ export const createUrqlClient = () => {
     isClient: process.browser,
   })
   return createClient({
-    url: `/api/graphql`,
+    url:
+      process.env.NODE_ENV === 'production'
+        ? `https://graphcdn.hakka.dev`
+        : `/api/graphql`,
     fetchOptions: {
       credentials: 'include',
     },
