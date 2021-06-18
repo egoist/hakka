@@ -1,7 +1,6 @@
 import React from 'react'
 import Head from 'next/head'
 import {
-  useCommentsQuery,
   useCreateCommentMutation,
   useHideTopicMutation,
   useTopicQuery,
@@ -63,29 +62,24 @@ const TopicPage: React.FC<PageProps> = ({ user, title }) => {
   const router = useRouter()
   const topicId = Number(router.query.topicId)
 
-  const [topicQuery] = useTopicQuery({
+  const [topicQuery, refetchTopicQuery] = useTopicQuery({
     variables: {
       id: topicId,
     },
     requestPolicy: 'cache-and-network',
   })
   const topic = topicQuery.data?.topicById
+  const comments = topicQuery.data?.comments
 
   const [, createCommentMutation] = useCreateCommentMutation()
-  const [commentsQuery, refetchCommentsQuery] = useCommentsQuery({
-    variables: {
-      topicId,
-      page: 1,
-    },
-    requestPolicy: 'network-only',
-  })
+
   const [, hideTopicMutation] = useHideTopicMutation()
   const commentEditorRef = React.useRef<HTMLTextAreaElement | null>(null)
   const [parentCommentId, setParentCommentId] = React.useState<number | null>(
     null,
   )
 
-  const parentComment = commentsQuery.data?.comments.items.find(
+  const parentComment = comments?.items.find(
     (item) => item.id === parentCommentId,
   )
 
@@ -103,9 +97,7 @@ const TopicPage: React.FC<PageProps> = ({ user, title }) => {
       if (data) {
         router.push(`/t/${topic!.id}#comment-${data.createComment.id}`)
         setParentCommentId(null)
-        refetchCommentsQuery({
-          requestPolicy: 'cache-and-network',
-        })
+        refetchTopicQuery()
         commentForm.resetForm()
       }
     },
@@ -127,6 +119,12 @@ const TopicPage: React.FC<PageProps> = ({ user, title }) => {
       <Main
         render={() => (
           <>
+            {topicQuery.fetching && (
+              <div className="flex justify-center items-center p-6 mt-8">
+                <Spinner />
+              </div>
+            )}
+
             {topic && (
               <div className="">
                 <div className="">
@@ -216,34 +214,26 @@ const TopicPage: React.FC<PageProps> = ({ user, title }) => {
               </div>
             )}
 
-            {commentsQuery.fetching && (
-              <div className="flex justify-center items-center p-6 mt-8 border-t border-border">
-                <Spinner />
+            {comments && comments.items.length > 0 && (
+              <div className="divide-y divide-border border-t border-border mt-8">
+                {comments.items.map((comment) => {
+                  return (
+                    <Comment
+                      key={comment.id}
+                      comment={comment}
+                      handleClickReplyButton={() => {
+                        setParentCommentId(comment.id)
+                        setTimeout(() => {
+                          commentEditorRef.current?.focus()
+                        }, 0)
+                      }}
+                    />
+                  )
+                })}
               </div>
             )}
 
-            {!commentsQuery.fetching &&
-              commentsQuery.data &&
-              commentsQuery.data.comments.items.length > 0 && (
-                <div className="divide-y divide-border border-t border-border mt-8">
-                  {commentsQuery.data.comments.items.map((comment) => {
-                    return (
-                      <Comment
-                        key={comment.id}
-                        comment={comment}
-                        handleClickReplyButton={() => {
-                          setParentCommentId(comment.id)
-                          setTimeout(() => {
-                            commentEditorRef.current?.focus()
-                          }, 0)
-                        }}
-                      />
-                    )
-                  })}
-                </div>
-              )}
-
-            {user && !commentsQuery.fetching && (
+            {user && !topicQuery.fetching && (
               <div className="flex space-x-3 border-t border-border mt-5 pt-5">
                 <div className="w-full">
                   {parentComment && (

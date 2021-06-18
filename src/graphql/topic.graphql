@@ -17,4 +17,26 @@ query topic($id: Int!) {
       domain
     }
   }
+
+  comments(topicId: $id) {
+    total
+    items {
+      id
+      createdAt
+      html
+      likesCount
+      isLiked
+      author {
+        username
+        avatar
+      }
+      parent {
+        id
+        author {
+          username
+        }
+        html
+      }
+    }
+  }
 }
