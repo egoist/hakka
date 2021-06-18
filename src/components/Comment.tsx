@@ -1,15 +1,14 @@
-import { CommentsQuery } from '@src/generated/graphql'
+import { TopicQuery } from '@src/generated/graphql'
 import { timeago } from '@src/lib/date'
 import clsx from 'clsx'
 import Link from 'next/link'
-import { useRouter } from 'next/router'
 import React from 'react'
 import { Avatar } from './Avatar'
 import { CommentLikeButton } from './CommentLikeButton'
 import { TopicReplyButton } from './TopicReplyButton'
 
 export const Comment: React.FC<{
-  comment: ArrayElement<CommentsQuery['comments']['items']>
+  comment: ArrayElement<TopicQuery['comments']['items']>
   handleClickReplyButton: (commentId: number) => void
 }> = ({ comment, handleClickReplyButton }) => {
   const [isActive, setIsActive] = React.useState(false)
