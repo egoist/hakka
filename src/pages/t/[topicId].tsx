@@ -1,12 +1,10 @@
 import React from 'react'
 import Head from 'next/head'
 import {
-  TopicDocument,
-  TopicQuery,
-  TopicQueryVariables,
   useCommentsQuery,
   useCreateCommentMutation,
   useHideTopicMutation,
+  useTopicQuery,
 } from '@src/generated/graphql'
 import { timeago } from '@src/lib/date'
 import { AuthProvider } from '@src/hooks/useAuth'
@@ -19,35 +17,35 @@ import { useRouter } from 'next/router'
 import { useFormik } from 'formik'
 import { stripHTML } from '@src/lib/utils'
 import { Button } from '@src/components/Button'
-import { queryGraphql } from '@server/lib/graphql'
 import { Spinner } from '@src/components/Spinner'
 import { Comment } from '@src/components/Comment'
 import { Main } from '@src/components/Main'
 import { Avatar } from '@src/components/Avatar'
+import { prisma } from '@server/lib/prisma'
 
 type PageProps = {
   user: AuthUser | null
-  topicQuery: TopicQuery
+  title: string
 }
 
 export const getServerSideProps: GetServerSideProps<PageProps> = async (
   ctx,
 ) => {
   const { user } = await getServerSession(ctx.req)
-  const topicId = ctx.query.topicId as string
+  const topicId = parseInt(ctx.query.topicId as string)
   const graphqlContext = {
     req: ctx.req,
     res: ctx.res,
     user,
   }
-  const topicQuery = await queryGraphql<TopicQuery, TopicQueryVariables>(
-    TopicDocument,
-    {
-      id: Number(topicId),
+
+  const topic = await prisma.topic.findUnique({
+    where: {
+      id: topicId,
     },
-    graphqlContext,
-  )
-  if (!topicQuery) {
+  })
+
+  if (!topic || topic.hidden) {
     return {
       notFound: true,
     }
@@ -56,15 +54,23 @@ export const getServerSideProps: GetServerSideProps<PageProps> = async (
   return {
     props: {
       user,
-      topicQuery,
+      title: `${topic.title} - HAKKA!`,
     },
   }
 }
 
-const TopicPage: React.FC<PageProps> = ({ user, topicQuery }) => {
+const TopicPage: React.FC<PageProps> = ({ user, title }) => {
   const router = useRouter()
   const topicId = Number(router.query.topicId)
-  const topic = topicQuery.topicById
+
+  const [topicQuery] = useTopicQuery({
+    variables: {
+      id: topicId,
+    },
+    requestPolicy: 'cache-and-network',
+  })
+  const topic = topicQuery.data?.topicById
+
   const [, createCommentMutation] = useCreateCommentMutation()
   const [commentsQuery, refetchCommentsQuery] = useCommentsQuery({
     variables: {
@@ -95,7 +101,7 @@ const TopicPage: React.FC<PageProps> = ({ user, topicQuery }) => {
         parentId: parentCommentId,
       })
       if (data) {
-        router.push(`/t/${topic.id}#comment-${data.createComment.id}`)
+        router.push(`/t/${topic!.id}#comment-${data.createComment.id}`)
         setParentCommentId(null)
         refetchCommentsQuery({
           requestPolicy: 'cache-and-network',
@@ -105,9 +111,8 @@ const TopicPage: React.FC<PageProps> = ({ user, topicQuery }) => {
     },
   })
 
-  const canEdit = user && user.id === topic.author.id
+  const canEdit = user && user.id === topic?.author.id
 
-  const title = `${topic.title} - HAKKA!`
   const description = `登录 HAKKA! 以回复此主题`
 
   return (
