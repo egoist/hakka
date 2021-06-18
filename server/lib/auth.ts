@@ -1,7 +1,7 @@
 import { IncomingMessage } from 'http'
 import cookie from 'cookie'
 import { NextApiRequest } from 'next'
-import Iron from '@hapi/iron'
+import { verify, sign } from 'jsonwebtoken'
 import { AUTH_COOKIE_NAME } from './constants'
 import { isAdmin } from '@server/guards/require-auth'
 import { prisma } from './prisma'
@@ -11,7 +11,7 @@ export type CookieUserPayload = {
 }
 
 export function createSecureToken(payload: CookieUserPayload) {
-  const token = Iron.seal(payload, process.env.ENCRYPT_SECRET, Iron.defaults)
+  const token = sign(payload, process.env.ENCRYPT_SECRET)
   return token
 }
 
@@ -20,10 +20,9 @@ export async function parseSecureToken(
 ): Promise<CookieUserPayload | null> {
   if (!token) return null
   try {
-    return Iron.unseal(token, process.env.ENCRYPT_SECRET, Iron.defaults)
+    return verify(token, process.env.ENCRYPT_SECRET) as any
   } catch (error) {
-    ;`
-    console.error('auth error', error)`
+    console.error('auth error', error)
     return null
   }
 }

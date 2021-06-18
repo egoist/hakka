@@ -24,7 +24,6 @@
   },
   "dependencies": {
     "@badrap/bar-of-progress": "^0.1.2",
-    "@hapi/iron": "^6.0.0",
     "@headlessui/react": "^0.3.1",
     "@prisma/client": "2.22.1",
     "@urql/exchange-graphcache": "^4.0.0",
