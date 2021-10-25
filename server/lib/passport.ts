@@ -33,7 +33,7 @@ if (enableGithub) {
           const user = await getUserByProviderProfile(profile, 'github')
           cb(null, user)
         } catch (error) {
-          cb(error)
+          cb(error as any)
         }
       },
     ),

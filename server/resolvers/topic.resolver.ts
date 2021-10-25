@@ -151,7 +151,7 @@ export class TopicResolver {
   async topics(@GqlContext() ctx: Context, @Args() args: TopicsArgs) {
     const skip = (args.page - 1) * args.take
 
-    const topics = await prisma.$queryRaw`
+    const topics: TODO = await prisma.$queryRaw`
     select "topic".* from "topics" "topic"
       left join "comments" "lastComment"
         on "lastComment"."id" = "topic"."lastCommentId"
